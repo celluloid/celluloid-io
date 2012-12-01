@@ -7,6 +7,7 @@ require 'celluloid/io/dns_resolver'
 require 'celluloid/io/mailbox'
 require 'celluloid/io/reactor'
 
+require 'celluloid/io/tokenizer'
 require 'celluloid/io/tcp_server'
 require 'celluloid/io/tcp_socket'
 require 'celluloid/io/udp_socket'
