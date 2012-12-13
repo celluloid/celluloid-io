@@ -1,3 +1,7 @@
+0.12.1
+------
+* Non-blocking connect workaround for JRuby
+
 0.12.0
 ------
 * Tracking release for Celluloid 0.12.0
