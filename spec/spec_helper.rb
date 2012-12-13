@@ -48,7 +48,6 @@ end
 
 def with_connected_sockets
   with_tcp_server do |server|
-    # FIXME: client isn't actually a Celluloid::IO::TCPSocket yet
     client = ::TCPSocket.new(example_addr, example_port)
     peer = server.accept
 
@@ -57,6 +56,24 @@ def with_connected_sockets
     ensure
       begin
         client.close
+        peer.close
+      rescue
+      end
+    end
+  end
+end
+
+def with_connected_actor_sockets
+  with_tcp_server do |server|
+    client_actor = ExampleActor.new
+    client_actor.wrap { @socket = TCPSocket.new(example_addr, example_port) }
+    peer = server.accept
+
+    begin
+      yield client_actor, peer
+    ensure
+      begin
+        client_actor.wrap { @socket.close }
         peer.close
       rescue
       end
