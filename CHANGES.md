@@ -1,3 +1,8 @@
+0.14.1 (2013-06-01)
+-------------------
+* Remove obsolete code for condition owners which is broken by the
+  Celluloid 0.14.1 release.
+
 0.14.0 (2013-05-07)
 -------------------
 * Add `close_read`/`close_write` delegates for rack-hijack support
