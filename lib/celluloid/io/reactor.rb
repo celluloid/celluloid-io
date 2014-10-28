@@ -41,14 +41,22 @@ module Celluloid
 
         monitor = @selector.register(io, set)
         monitor.value = Task.current
-        Task.suspend :iowait
+        
+        begin
+          Task.suspend :iowait
+        ensure
+          # In all cases we want to ensure that the monitor is closed once we 
+          # have woken up. However, in some cases, the monitor is already 
+          # invalid, e.g. in the case that we are terminating. We catch this
+          # case explicitly.
+          monitor.close unless Celluloid::Task::TerminatedError === $!
+        end
       end
 
       # Run the reactor, waiting for events or wakeup signal
       def run_once(timeout = nil)
         @selector.select(timeout) do |monitor|
           task = monitor.value
-          monitor.close
 
           if task.running?
             task.resume
