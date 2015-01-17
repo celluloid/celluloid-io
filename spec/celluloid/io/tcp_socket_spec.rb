@@ -4,6 +4,33 @@ describe Celluloid::IO::TCPSocket do
   let(:payload) { 'ohai' }
 
   context "inside Celluloid::IO" do
+
+    describe ".open" do
+      it "returns the open socket" do
+        server = ::TCPServer.new example_addr, example_port
+        thread = Thread.new { server.accept }
+
+        socket = within_io_actor { Celluloid::IO::TCPSocket.open(example_addr, example_port) }
+        socket.should be_a(Celluloid::IO::TCPSocket)
+
+        server.close
+        thread.terminate
+        socket.close
+      end
+      context "when passed a block" do
+        it "returns the block evaluation" do
+          server = ::TCPServer.new example_addr, example_port
+          thread = Thread.new { server.accept }
+  
+          value = within_io_actor { Celluloid::IO::TCPSocket.open(example_addr, example_port) { true } }
+          value.should be_true
+  
+          server.close
+          thread.terminate
+        end
+      end
+    end
+
     it "connects to TCP servers" do
       server = ::TCPServer.new example_addr, example_port
       thread = Thread.new { server.accept }

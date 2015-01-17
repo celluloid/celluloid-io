@@ -17,7 +17,7 @@ module Celluloid
 
         if block_given?
           begin
-            yield sock
+            return yield(sock)
           ensure
             sock.close
           end
