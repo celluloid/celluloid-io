@@ -14,16 +14,13 @@ module Celluloid
       # automatically when done (if a block is given)
       def self.open(*args, &block)
         sock = new(*args)
+        return sock unless block_given?
 
-        if block_given?
-          begin
-            return yield(sock)
-          ensure
-            sock.close
-          end
+        begin
+          yield(sock)
+        ensure
+          sock.close
         end
-
-        sock
       end
 
       # Convert a Ruby TCPSocket into a Celluloid::IO::TCPSocket
