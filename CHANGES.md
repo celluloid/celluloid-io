@@ -1,3 +1,9 @@
+0.16.2 (2014-01-30)
+-------------------
+* More TCPSocket compatibility fixes
+* Ensure monitors are closed when tasks resume
+* Fix Errno::EAGAIN handling in Stream#syswrite
+
 0.16.1 (2014-10-08)
 -------------------
 * Revert read/write interest patch as it caused file descriptor leaks
