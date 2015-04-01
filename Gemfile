@@ -8,7 +8,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec', '~> 2.14.0'
+  gem 'rspec', '~> 3.2'
 end
 
 group :gem_build_tools do
