@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Celluloid::IO do
+RSpec.describe Celluloid::IO do
   context "copy_stream" do
     let(:host) { "127.0.0.1" }
     let(:port) { 23456 }

@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Celluloid::IO::SSLServer do
+RSpec.describe Celluloid::IO::SSLServer do
   let(:client_cert) { OpenSSL::X509::Certificate.new fixture_dir.join("client.crt").read }
   let(:client_key)  { OpenSSL::PKey::RSA.new fixture_dir.join("client.key").read }
   let(:client_context) do

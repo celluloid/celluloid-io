@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Celluloid::IO::UNIXSocket do
+RSpec.describe Celluloid::IO::UNIXSocket do
   before do
     pending "JRuby support" if defined?(JRUBY_VERSION)
   end
@@ -102,7 +100,7 @@ describe Celluloid::IO::UNIXSocket do
           expect(Time.now - started_at).to be > 0.5
         end
       end
-      
+
       it "blocks until gets the next byte" do
         with_connected_sockets do |subject, peer|
           peer << 0x00

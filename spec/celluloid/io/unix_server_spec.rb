@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Celluloid::IO::UNIXServer do
+RSpec.describe Celluloid::IO::UNIXServer do
   describe "#accept" do
     before do
       pending "JRuby support" if defined?(JRUBY_VERSION)

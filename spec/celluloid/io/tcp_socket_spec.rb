@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Celluloid::IO::TCPSocket do
+RSpec.describe Celluloid::IO::TCPSocket do
   let(:payload) { 'ohai' }
 
   context "inside Celluloid::IO" do
@@ -21,10 +19,10 @@ describe Celluloid::IO::TCPSocket do
         it "returns the block evaluation" do
           server = ::TCPServer.new example_addr, example_port
           thread = Thread.new { server.accept }
-  
+
           value = within_io_actor { Celluloid::IO::TCPSocket.open(example_addr, example_port) { true } }
           expect(value).to be_truthy
-  
+
           server.close
           thread.terminate
         end
@@ -115,7 +113,7 @@ describe Celluloid::IO::TCPSocket do
           expect(Time.now - started_at).to be > 0.5
         end
       end
-      
+
       it "blocks until gets the next byte" do
         with_connected_sockets do |subject, peer|
           peer << 0x00

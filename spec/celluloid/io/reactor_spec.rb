@@ -1,18 +1,16 @@
-require 'spec_helper'
-
-describe Celluloid::IO::Reactor do
+RSpec.describe Celluloid::IO::Reactor do
   let(:payload) { "balls" }
-  
+
   it "shouldn't crash" do
     server = ::TCPServer.new example_addr, example_port
-    
+
     thread = Thread.new { server.accept }
-    
+
     socket = within_io_actor { Celluloid::IO::TCPSocket.new example_addr, example_port }
     peer = thread.value
     peer_thread = Thread.new { loop { peer << payload } }
     handle = false
-    
+
     # Main server body:
     within_io_actor do
       begin
@@ -28,9 +26,9 @@ describe Celluloid::IO::Reactor do
         handle = true
       end
     end
-    
+
     expect(handle).to be_truthy
-    
+
     server.close
     peer.close
     socket.close

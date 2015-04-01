@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Celluloid::IO::TCPServer do
+RSpec.describe Celluloid::IO::TCPServer do
   describe "#accept" do
     let(:payload) { 'ohai' }
 
