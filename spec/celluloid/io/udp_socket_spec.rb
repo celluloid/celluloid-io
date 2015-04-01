@@ -12,25 +12,25 @@ describe Celluloid::IO::UDPSocket do
 
   context "inside Celluloid::IO" do
     it "should be evented" do
-      within_io_actor { Celluloid::IO.evented? }.should be_true
+      expect(within_io_actor { Celluloid::IO.evented? }).to be_true
     end
 
     it "sends and receives packets" do
       within_io_actor do
         subject.send payload, 0, example_addr, example_port
-        subject.recvfrom(payload.size).first.should == payload
+        expect(subject.recvfrom(payload.size).first).to eq(payload)
       end
     end
   end
 
   context "outside Celluloid::IO" do
     it "should be blocking" do
-      Celluloid::IO.should_not be_evented
+      expect(Celluloid::IO).not_to be_evented
     end
 
     it "sends and receives packets" do
       subject.send payload, 0, example_addr, example_port
-      subject.recvfrom(payload.size).first.should == payload
+      expect(subject.recvfrom(payload.size).first).to eq(payload)
     end
   end
 end

@@ -11,7 +11,7 @@ describe Celluloid::IO::UNIXServer do
     context "inside Celluloid::IO" do
       it "should be evented" do
         with_unix_server do |subject|
-          within_io_actor { Celluloid::IO.evented? }.should be_true
+          expect(within_io_actor { Celluloid::IO.evented? }).to be_true
         end
       end
 
@@ -19,11 +19,11 @@ describe Celluloid::IO::UNIXServer do
         with_unix_server do |subject|
           thread = Thread.new { UNIXSocket.new(example_unix_sock) }
           peer = within_io_actor { subject.accept }
-          peer.should be_a Celluloid::IO::UNIXSocket
+          expect(peer).to be_a Celluloid::IO::UNIXSocket
 
           client = thread.value
           client.write payload
-          peer.read(payload.size).should eq payload
+          expect(peer.read(payload.size)).to eq payload
         end
       end
 
@@ -40,7 +40,7 @@ describe Celluloid::IO::UNIXServer do
       context "outside Celluloid::IO" do
         it "should be blocking" do
           with_unix_server do |subject|
-            Celluloid::IO.should_not be_evented
+            expect(Celluloid::IO).not_to be_evented
           end
         end
 
@@ -48,11 +48,11 @@ describe Celluloid::IO::UNIXServer do
           with_unix_server do |subject|
             thread = Thread.new { UNIXSocket.new(example_unix_sock) }
             peer   = subject.accept
-            peer.should be_a Celluloid::IO::UNIXSocket
+            expect(peer).to be_a Celluloid::IO::UNIXSocket
 
             client = thread.value
             client.write payload
-            peer.read(payload.size).should eq payload
+            expect(peer.read(payload.size)).to eq payload
           end
         end
 

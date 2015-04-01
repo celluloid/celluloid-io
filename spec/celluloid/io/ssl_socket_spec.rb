@@ -72,10 +72,10 @@ describe Celluloid::IO::SSLSocket do
       with_ssl_sockets do |ssl_client, ssl_peer|
         within_io_actor do
           ssl_peer << request
-          ssl_client.read(request.size).should eq(request)
+          expect(ssl_client.read(request.size)).to eq(request)
 
           ssl_client << response
-          ssl_peer.read(response.size).should eq(response)
+          expect(ssl_peer.read(response.size)).to eq(response)
         end
       end
     end
@@ -85,22 +85,22 @@ describe Celluloid::IO::SSLSocket do
       with_raw_sockets do |client, peer|
         within_io_actor do
           peer << request
-          client.read(request.size).should eq(request)
+          expect(client.read(request.size)).to eq(request)
 
           client << response
-          peer.read(response.size).should eq(response)
+          expect(peer.read(response.size)).to eq(response)
 
           # now that we've written bytes, upgrade to SSL
           client_thread = Thread.new { OpenSSL::SSL::SSLSocket.new(client).connect }
           ssl_peer = Celluloid::IO::SSLSocket.new peer, server_context
-          ssl_peer.should eq(ssl_peer.accept)
+          expect(ssl_peer).to eq(ssl_peer.accept)
           ssl_client = client_thread.value
 
           ssl_peer << request
-          ssl_client.read(request.size).should eq(request)
+          expect(ssl_client.read(request.size)).to eq(request)
 
           ssl_client << response
-          ssl_peer.read(response.size).should eq(response)
+          expect(ssl_peer.read(response.size)).to eq(response)
         end
       end
     end
@@ -110,10 +110,10 @@ describe Celluloid::IO::SSLSocket do
     it "connects to SSL servers over TCP" do
       with_ssl_sockets do |ssl_client, ssl_peer|
         ssl_peer << request
-        ssl_client.read(request.size).should eq(request)
+        expect(ssl_client.read(request.size)).to eq(request)
 
         ssl_client << response
-        ssl_peer.read(response.size).should eq(response)
+        expect(ssl_peer.read(response.size)).to eq(response)
       end
     end
 
@@ -121,22 +121,22 @@ describe Celluloid::IO::SSLSocket do
       pending "JRuby support" if defined?(JRUBY_VERSION)
       with_raw_sockets do |client, peer|
         peer << request
-        client.read(request.size).should eq(request)
+        expect(client.read(request.size)).to eq(request)
 
         client << response
-        peer.read(response.size).should eq(response)
+        expect(peer.read(response.size)).to eq(response)
 
         # now that we've written bytes, upgrade to SSL
         client_thread = Thread.new { OpenSSL::SSL::SSLSocket.new(client).connect }
         ssl_peer = Celluloid::IO::SSLSocket.new peer, server_context
-        ssl_peer.should eq(ssl_peer.accept)
+        expect(ssl_peer).to eq(ssl_peer.accept)
         ssl_client = client_thread.value
 
         ssl_peer << request
-        ssl_client.read(request.size).should eq(request)
+        expect(ssl_client.read(request.size)).to eq(request)
 
         ssl_client << response
-        ssl_peer.read(response.size).should eq(response)
+        expect(ssl_peer.read(response.size)).to eq(response)
       end
     end
   end
@@ -145,27 +145,27 @@ describe Celluloid::IO::SSLSocket do
     # FIXME: seems bad? o_O
     pending "wtf is wrong with this on JRuby" if defined? JRUBY_VERSION
     with_ssl_sockets do |ssl_client|
-      ssl_client.cert.to_der.should eq(client_cert.to_der)
+      expect(ssl_client.cert.to_der).to eq(client_cert.to_der)
     end
   end
 
   it "knows its peer_cert" do
     with_ssl_sockets do |ssl_client|
-      ssl_client.peer_cert.to_der.should eq(ssl_client.to_io.peer_cert.to_der)
+      expect(ssl_client.peer_cert.to_der).to eq(ssl_client.to_io.peer_cert.to_der)
     end
   end
 
   it "knows its peer_cert_chain" do
     with_ssl_sockets do |ssl_client|
-      ssl_client.peer_cert_chain.zip(ssl_client.to_io.peer_cert_chain).map do |c1, c2|
+      expect(ssl_client.peer_cert_chain.zip(ssl_client.to_io.peer_cert_chain).map do |c1, c2|
         c1.to_der == c2.to_der
-      end.should be_all
+      end).to be_all
     end
   end
 
   it "knows its cipher" do
     with_ssl_sockets do |ssl_client|
-      ssl_client.cipher.should eq(ssl_client.to_io.cipher)
+      expect(ssl_client.cipher).to eq(ssl_client.to_io.cipher)
     end
   end
 
@@ -174,7 +174,7 @@ describe Celluloid::IO::SSLSocket do
     pending "jruby-openssl support" if defined? JRUBY_VERSION
 
     with_ssl_sockets do |ssl_client|
-      ssl_client.client_ca.should eq(ssl_client.to_io.client_ca)
+      expect(ssl_client.client_ca).to eq(ssl_client.to_io.client_ca)
     end
   end
 
@@ -183,7 +183,7 @@ describe Celluloid::IO::SSLSocket do
     pending "jruby-openssl support" if defined? JRUBY_VERSION
 
     with_ssl_sockets do |ssl_client, ssl_peer|
-      ssl_client.verify_result.should eq(OpenSSL::X509::V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT)
+      expect(ssl_client.verify_result).to eq(OpenSSL::X509::V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT)
     end
   end
 
