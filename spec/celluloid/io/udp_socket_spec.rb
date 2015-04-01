@@ -12,7 +12,7 @@ describe Celluloid::IO::UDPSocket do
 
   context "inside Celluloid::IO" do
     it "should be evented" do
-      expect(within_io_actor { Celluloid::IO.evented? }).to be_true
+      expect(within_io_actor { Celluloid::IO.evented? }).to be_truthy
     end
 
     it "sends and receives packets" do

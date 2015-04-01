@@ -11,7 +11,7 @@ describe Celluloid::IO::UNIXServer do
     context "inside Celluloid::IO" do
       it "should be evented" do
         with_unix_server do |subject|
-          expect(within_io_actor { Celluloid::IO.evented? }).to be_true
+          expect(within_io_actor { Celluloid::IO.evented? }).to be_truthy
         end
       end
 

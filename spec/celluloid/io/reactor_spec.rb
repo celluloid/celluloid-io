@@ -29,7 +29,7 @@ describe Celluloid::IO::Reactor do
       end
     end
     
-    expect(handle).to be_true
+    expect(handle).to be_truthy
     
     server.close
     peer.close

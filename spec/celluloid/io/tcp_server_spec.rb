@@ -11,7 +11,7 @@ describe Celluloid::IO::TCPServer do
     context "inside Celluloid::IO" do
       it "should be evented" do
         with_tcp_server do |subject|
-          expect(within_io_actor { Celluloid::IO.evented? }).to be_true
+          expect(within_io_actor { Celluloid::IO.evented? }).to be_truthy
         end
       end
 
