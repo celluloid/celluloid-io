@@ -7,12 +7,13 @@ module Celluloid
       extend Forwardable
 
       def_delegators :@socket, :read_nonblock, :write_nonblock, :close, :closed?,
-        :cert, :cipher, :client_ca, :peer_cert, :peer_cert_chain, :verify_result, :peeraddr
+        :cert, :cipher, :client_ca, :peer_cert, :peer_cert_chain, :verify_result, :peeraddr, :sync_close=
 
       def initialize(io, ctx = OpenSSL::SSL::SSLContext.new)
         super()
         @context = ctx
         @socket = OpenSSL::SSL::SSLSocket.new(::IO.try_convert(io), @context)
+        @socket.sync_close = true if @socket.respond_to?(:sync_close=)
       end
 
       def connect
