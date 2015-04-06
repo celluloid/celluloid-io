@@ -25,7 +25,7 @@ describe Celluloid::IO::SSLServer do
     context "inside Celluloid::IO" do
       it "should be evented" do
         with_ssl_server do |subject|
-          within_io_actor { Celluloid::IO.evented? }.should be_true
+          within_io_actor { Celluloid::IO.evented? }.should be_truthy
         end
       end
 
