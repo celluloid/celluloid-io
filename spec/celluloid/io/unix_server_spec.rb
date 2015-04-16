@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Celluloid::IO::UNIXServer do
   describe "#accept" do
     before do
-      pending "JRuby support" if defined?(JRUBY_VERSION)
+      pending "JRuby support" if RUBY_PLATFORM == 'java'
     end
 
     let(:payload) { 'ohai' }

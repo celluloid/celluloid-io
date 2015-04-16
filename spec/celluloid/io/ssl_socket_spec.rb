@@ -81,7 +81,7 @@ describe Celluloid::IO::SSLSocket do
     end
 
     it "starts SSL on a connected TCP socket" do
-      pending "JRuby support" if defined?(JRUBY_VERSION)
+      pending "JRuby support" if RUBY_PLATFORM == 'java'
       with_raw_sockets do |client, peer|
         within_io_actor do
           peer << request
@@ -118,7 +118,7 @@ describe Celluloid::IO::SSLSocket do
     end
 
     it "starts SSL on a connected TCP socket" do
-      pending "JRuby support" if defined?(JRUBY_VERSION)
+      pending "JRuby support" if RUBY_PLATFORM == 'java'
       with_raw_sockets do |client, peer|
         peer << request
         client.read(request.size).should eq(request)
@@ -143,7 +143,7 @@ describe Celluloid::IO::SSLSocket do
 
   it "knows its cert" do
     # FIXME: seems bad? o_O
-    pending "wtf is wrong with this on JRuby" if defined? JRUBY_VERSION
+    pending "wtf is wrong with this on JRuby" if RUBY_PLATFORM == 'java'
     with_ssl_sockets do |ssl_client|
       ssl_client.cert.to_der.should eq(client_cert.to_der)
     end
@@ -171,7 +171,7 @@ describe Celluloid::IO::SSLSocket do
 
   it "knows its client_ca" do
     # jruby-openssl does not implement this method
-    pending "jruby-openssl support" if defined? JRUBY_VERSION
+    pending "jruby-openssl support" if RUBY_PLATFORM == 'java'
 
     with_ssl_sockets do |ssl_client|
       ssl_client.client_ca.should eq(ssl_client.to_io.client_ca)
@@ -180,7 +180,7 @@ describe Celluloid::IO::SSLSocket do
 
   it "verifies peer certificates" do
     # FIXME: JRuby seems to be giving the wrong result here o_O
-    pending "jruby-openssl support" if defined? JRUBY_VERSION
+    pending "jruby-openssl support" if RUBY_PLATFORM == 'java'
 
     with_ssl_sockets do |ssl_client, ssl_peer|
       ssl_client.verify_result.should eq(OpenSSL::X509::V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT)
