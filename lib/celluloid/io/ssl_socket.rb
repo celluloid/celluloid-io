@@ -6,8 +6,20 @@ module Celluloid
     class SSLSocket < Stream
       extend Forwardable
 
-      def_delegators :@socket, :read_nonblock, :write_nonblock, :close, :closed?,
-        :cert, :cipher, :client_ca, :peer_cert, :peer_cert_chain, :verify_result, :peeraddr, :sync_close=
+      def_delegators :@socket,
+        :read_nonblock,
+        :write_nonblock,
+        :close,
+        :closed?,
+        :cert,
+        :cipher,
+        :client_ca,
+        :peeraddr,
+        :peer_cert,
+        :peer_cert_chain,
+        :post_connection_check,
+        :verify_result,
+        :sync_close=
 
       def initialize(io, ctx = OpenSSL::SSL::SSLContext.new)
         super()
