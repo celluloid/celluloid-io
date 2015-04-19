@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'celluloid/io'
 require 'celluloid/rspec'
+require 'nenv'
 
 module CelluloidSpecs
   # Require a file from Celluloid gem 'spec' location directly
@@ -20,6 +21,9 @@ module CelluloidSpecs
 end
 
 CelluloidSpecs.require('support/actor_example_class')
+CelluloidSpecs.require('support/crash_checking')
+CelluloidSpecs.require('support/logging')
+CelluloidSpecs.require('support/sleep_and_wait')
 
 require 'coveralls'
 Coveralls.wear!
@@ -43,6 +47,11 @@ RSpec.configure do |config|
     Celluloid.boot
 
     FileUtils.rm("/tmp/cell_sock") if File.exist?("/tmp/cell_sock")
+  end
+
+  config.before(:each) do |example|
+    @fake_logger = Specs::FakeLogger.new(Celluloid.logger, example.description)
+    stub_const('Celluloid::Internals::Logger', @fake_logger)
   end
 end
 
