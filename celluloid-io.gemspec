@@ -16,7 +16,10 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'celluloid', '>= 0.16.0'
+  gem.add_dependency 'celluloid', '~> 0.17.0.pre3'
+  gem.add_dependency "celluloid-pool"
+  gem.add_dependency "celluloid-fsm"
+  gem.add_dependency "celluloid-supervision"
   gem.add_dependency 'nio4r',     '>= 1.1.0'
 
   gem.add_development_dependency 'bundler'

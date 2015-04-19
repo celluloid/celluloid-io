@@ -6,7 +6,7 @@ require 'celluloid/rspec'
 module CelluloidSpecs
   # Require a file from Celluloid gem 'spec' location directly
   def self.require(path)
-    celluloid = Pathname(Gem::Specification.find_by_name('celluloid').full_gem_path)
+    celluloid = Pathname(Gem::Specification.find_all_by_name('celluloid').first.full_gem_path)
     full_path = celluloid + 'spec' + path
     Kernel.require(full_path.to_s)
   end
