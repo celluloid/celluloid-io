@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/celluloid/io/version', __FILE__)
+require File.expand_path("../culture/sync", __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = "celluloid-io"
@@ -16,7 +16,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'celluloid', '>= 0.16.0'
+  Celluloid::Sync.gems(gem)
+  
   gem.add_dependency 'nio4r',     '>= 1.1.0'
 
   gem.add_development_dependency 'rake'
