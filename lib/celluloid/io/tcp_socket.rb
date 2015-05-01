@@ -80,7 +80,9 @@ module Celluloid
 
         begin
           @socket.connect_nonblock Socket.sockaddr_in(remote_port, @addr.to_s)
-        rescue Errno::EINPROGRESS
+        rescue Errno::EINPROGRESS, Errno::EALREADY
+          # JRuby raises EINPROGRESS, MRI raises EALREADY
+
           wait_writable
 
           # HAX: for some reason we need to finish_connect ourselves on JRuby
