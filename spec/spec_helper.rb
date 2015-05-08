@@ -35,7 +35,7 @@ class ExampleActor
   end
 end
 
-EXAMPLE_PORT = 12345
+EXAMPLE_PORT = 12345 + Random.rand(1024)
 
 def example_addr; '127.0.0.1'; end
 def example_port; EXAMPLE_PORT; end
@@ -72,8 +72,7 @@ end
 
 def with_connected_sockets
   with_tcp_server do |server|
-    # FIXME: client isn't actually a Celluloid::IO::TCPSocket yet
-    client = ::TCPSocket.new(example_addr, example_port)
+    client = Celluloid::IO::TCPSocket.new(example_addr, example_port)
     peer = server.accept
 
     begin
