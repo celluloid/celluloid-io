@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.require_paths = ["lib"]
 
-  Celluloid::Sync.gems(gem)
+  Celluloid::Sync::Gemspec[gem]
   
   gem.add_dependency 'nio4r',     '>= 1.1.0'
 
