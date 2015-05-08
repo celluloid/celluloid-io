@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Celluloid::IO::UNIXServer do
   describe "#accept" do
+
     before do
       pending "JRuby support" if RUBY_PLATFORM == 'java'
     end

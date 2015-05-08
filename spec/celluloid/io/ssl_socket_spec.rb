@@ -81,7 +81,10 @@ describe Celluloid::IO::SSLSocket do
     end
 
     it "starts SSL on a connected TCP socket" do
-      pending "JRuby support" if RUBY_PLATFORM == 'java'
+      if RUBY_PLATFORM == 'java'
+        pending "JRuby support"
+        fail "Bypassing potential deadlock."
+      end
       with_raw_sockets do |client, peer|
         within_io_actor do
           peer << request
@@ -118,7 +121,10 @@ describe Celluloid::IO::SSLSocket do
     end
 
     it "starts SSL on a connected TCP socket" do
-      pending "JRuby support" if RUBY_PLATFORM == 'java'
+      if RUBY_PLATFORM == 'java'
+        pending "JRuby support"
+        fail "Bypassing potential deadlock."
+      end
       with_raw_sockets do |client, peer|
         peer << request
         expect(client.read(request.size)).to eq(request)
