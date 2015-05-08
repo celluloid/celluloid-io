@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe Celluloid::IO::UNIXSocket do
-  before do
-    pending "JRuby support" if RUBY_PLATFORM == 'java'
+  before(:each) do
+    pending "jRuby support" if RUBY_PLATFORM == 'java'
+    fail "Avoid potential deadlock under jRuby"
   end
 
   let(:payload) { 'ohai' }
