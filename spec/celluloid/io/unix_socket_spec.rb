@@ -15,7 +15,7 @@ describe Celluloid::IO::UNIXSocket do
       peer = thread.value
 
       peer << payload
-      within_io_actor { socket.read(payload.size) }.should eq payload
+      expect(within_io_actor { socket.read(payload.size) }).to eq payload
 
       server.close
       socket.close
@@ -25,56 +25,56 @@ describe Celluloid::IO::UNIXSocket do
 
     it "should be evented" do
       with_connected_unix_sockets do |subject|
-        within_io_actor { Celluloid::IO.evented? }.should be_truthy
+        expect(within_io_actor { Celluloid::IO.evented? }).to be_truthy
       end
     end
 
     it "read complete payload when nil size is given to #read" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload
-        within_io_actor { subject.read(nil) }.should eq payload
+        expect(within_io_actor { subject.read(nil) }).to eq payload
       end
     end
 
     it "read complete payload when no size is given to #read" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload
-        within_io_actor { subject.read }.should eq payload
+        expect(within_io_actor { subject.read }).to eq payload
       end
     end
 
     it "reads data" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload
-        within_io_actor { subject.read(payload.size) }.should eq payload
+        expect(within_io_actor { subject.read(payload.size) }).to eq payload
       end
     end
 
     it "reads data in binary encoding" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload
-        within_io_actor { subject.read(payload.size).encoding }.should eq Encoding::BINARY
+        expect(within_io_actor { subject.read(payload.size).encoding }).to eq Encoding::BINARY
       end
     end
 
     it "reads partial data" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload * 2
-        within_io_actor { subject.readpartial(payload.size) }.should eq payload
+        expect(within_io_actor { subject.readpartial(payload.size) }).to eq payload
       end
     end
 
     it "reads partial data in binary encoding" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload * 2
-        within_io_actor { subject.readpartial(payload.size).encoding }.should eq Encoding::BINARY
+        expect(within_io_actor { subject.readpartial(payload.size).encoding }).to eq Encoding::BINARY
       end
     end
 
     it "writes data" do
       with_connected_unix_sockets do |subject, peer|
         within_io_actor { subject << payload }
-        peer.read(payload.size).should eq payload
+        expect(peer.read(payload.size)).to eq payload
       end
     end
 
@@ -99,7 +99,7 @@ describe Celluloid::IO::UNIXSocket do
           started_at = Time.now
           Thread.new{ sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
-          (Time.now - started_at).should > 0.5
+          expect(Time.now - started_at).to be > 0.5
         end
       end
       
@@ -111,7 +111,7 @@ describe Celluloid::IO::UNIXSocket do
             within_io_actor {
               subject.read(1)
               Celluloid.timeout(0.5) {
-                subject.eof?.should be_false
+                expect(subject.eof?).to be_falsey
               }
             }
           }.to raise_error(Celluloid::Task::TimeoutError)
@@ -128,7 +128,7 @@ describe Celluloid::IO::UNIXSocket do
       peer = thread.value
 
       peer << payload
-      socket.read(payload.size).should eq payload
+      expect(socket.read(payload.size)).to eq payload
 
       server.close
       socket.close
@@ -138,28 +138,28 @@ describe Celluloid::IO::UNIXSocket do
 
     it "should be blocking" do
       with_connected_unix_sockets do |subject|
-        Celluloid::IO.should_not be_evented
+        expect(Celluloid::IO).not_to be_evented
       end
     end
 
     it "reads data" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload
-        subject.read(payload.size).should eq payload
+        expect(subject.read(payload.size)).to eq payload
       end
     end
 
     it "reads partial data" do
       with_connected_unix_sockets do |subject, peer|
         peer << payload * 2
-        subject.readpartial(payload.size).should eq payload
+        expect(subject.readpartial(payload.size)).to eq payload
       end
     end
 
     it "writes data" do
       with_connected_unix_sockets do |subject, peer|
         subject << payload
-        peer.read(payload.size).should eq payload
+        expect(peer.read(payload.size)).to eq payload
       end
     end
   end
