@@ -142,7 +142,7 @@ module Celluloid
         ret
       end
 
-      # Reads the next "line+ from the stream.  Lines are separated by +eol+.  If
+      # Reads the next line from the stream.  Lines are separated by +eol+.  If
       # +limit+ is provided the result will not be longer than the given number of
       # bytes.
       #
