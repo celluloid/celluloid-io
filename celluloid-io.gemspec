@@ -5,8 +5,8 @@ Gem::Specification.new do |gem|
   gem.name          = "celluloid-io"
   gem.version       = Celluloid::IO::VERSION
   gem.license       = 'MIT'
-  gem.authors       = ["Tony Arcieri"]
-  gem.email         = ["tony.arcieri@gmail.com"]
+  gem.authors       = ["Tony Arcieri", "digitalextremist //"]
+  gem.email         = ["tony.arcieri@gmail.com", "code@extremist.digital"]
   gem.description   = "Evented IO for Celluloid actors"
   gem.summary       = "Celluloid::IO allows you to monitor multiple IO objects within a Celluloid actor"
   gem.homepage      = "http://github.com/celluloid/celluloid-io"
@@ -20,6 +20,5 @@ Gem::Specification.new do |gem|
   
   gem.add_dependency 'nio4r',     '>= 1.1.0'
 
-  gem.add_development_dependency 'guard-rspec'
   gem.add_development_dependency 'rb-fsevent', '~> 0.9.1' if RUBY_PLATFORM =~ /darwin/
 end
