@@ -127,7 +127,7 @@ describe Celluloid::IO::TCPSocket do
                 expect(subject.eof?).to be_falsey
               }
             }
-          }.to raise_error(Celluloid::Task::TimeoutError)
+          }.to raise_error(Celluloid::TaskTimeout)
         end
       end
     end

@@ -5,7 +5,7 @@ Gem::Specification.new do |gem|
   gem.name          = "celluloid-io"
   gem.version       = Celluloid::IO::VERSION
   gem.license       = 'MIT'
-  gem.authors       = ["Tony Arcieri", "digitalextremist //"]
+  gem.authors       = ["Tony Arcieri", "Donovan Keme"]
   gem.email         = ["tony.arcieri@gmail.com", "code@extremist.digital"]
   gem.description   = "Evented IO for Celluloid actors"
   gem.summary       = "Celluloid::IO allows you to monitor multiple IO objects within a Celluloid actor"

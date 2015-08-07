@@ -21,8 +21,8 @@ describe Celluloid::IO::Reactor do
             socket.readpartial(2046)
           end
         end
-      # rescuing timeout, ok. rescuing terminated error, is it ok? TODO: investigate
-      rescue Celluloid::Task::TerminatedError, Timeout::Error
+      # rescuing timeout, ok. rescuing terminated exception, is it ok? TODO: investigate
+      rescue Celluloid::TaskTerminated, Celluloid::TaskTimeout, Timeout::Error
       ensure
         socket.readpartial(2046)
         handle = true
