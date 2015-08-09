@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Celluloid::IO::Reactor do
   let(:payload) { "balls" }
+  let(:example_port) { assign_port }
   
   it "shouldn't crash" do
     server = ::TCPServer.new example_addr, example_port

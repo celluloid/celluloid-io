@@ -12,7 +12,17 @@ module Celluloid
       end
 
       def initialize(socket_path)
-        @server = ::UNIXServer.new(socket_path)
+        begin
+          @server = ::UNIXServer.new(socket_path)
+        rescue => ex
+          # Translate the EADDRINUSE jRuby exception.
+          raise unless RUBY_PLATFORM == 'java'
+          if ex.class.name == "IOError" && # Won't agree to .is_a?(IOError)
+             ex.message.include?("in use")
+            raise Errno::EADDRINUSE.new(ex.message)
+          end
+          raise
+        end
       end
 
       def accept

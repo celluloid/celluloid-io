@@ -5,6 +5,7 @@ describe Celluloid::IO::SSLSocket do
   let(:request)  { 'ping' }
   let(:response) { 'pong' }
 
+  let(:example_port) { assign_port }
   let(:client_cert) { OpenSSL::X509::Certificate.new fixture_dir.join("client.crt").read }
   let(:client_key)  { OpenSSL::PKey::RSA.new fixture_dir.join("client.key").read }
   let(:client_context) do
@@ -14,21 +15,33 @@ describe Celluloid::IO::SSLSocket do
     end
   end
 
+  after(:each) {
+    client.close rescue nil
+    server.close rescue nil
+  }
+
   let(:client) do
-    remaining_attempts = 3
-
-    begin
-      TCPSocket.new example_addr, example_ssl_port
-    rescue Errno::ECONNREFUSED
-      # HAX: sometimes this fails to connect? o_O
-      # This is quite likely due to the Thread.pass style spinlocks for startup
-      raise if remaining_attempts < 1
-      remaining_attempts -= 1
-
-      # Seems gimpy, but sleep and retry
-      sleep 0.1
-      retry
+    attempts = 0
+    socket = begin
+    Timeout.timeout(MAX_TIME) {
+      begin
+        TCPSocket.new example_addr, example_port
+      rescue Errno::ECONNREFUSED
+        raise if attempts >= MAX_ATTEMPTS
+      attempts += 1
+        # HAX: sometimes this fails to connect? o_O
+        # ... This can often fail 20 times in a row ... so yeah
+        # This is quite likely due to the Thread.pass style spinlocks for startup
+        # Seems gimpy, but sleep and retry
+        sleep 0.0126
+        retry
+      end
+    }
+    rescue => ex
+      attempted = "Tried #{attempts} times to instantiate socket."
+      raise ex.class.new(attempted)
     end
+    return socket
   end
 
   let(:ssl_client) { Celluloid::IO::SSLSocket.new client, client_context }
@@ -42,21 +55,23 @@ describe Celluloid::IO::SSLSocket do
     end
   end
 
-  let(:server)     { TCPServer.new example_addr, example_ssl_port }
-  let(:ssl_server) { OpenSSL::SSL::SSLServer.new server, server_context }
+  let(:server)     { TCPServer.new example_addr, example_port }
+  let(:ssl_server) { OpenSSL::SSL::SSLServer.new(server, server_context) }
   let(:server_thread) do
-    Thread.new { ssl_server.accept }.tap do |thread|
+    server = Thread.new { ssl_server.accept }.tap do |thread|
       Thread.pass while thread.status && thread.status != "sleep"
       thread.join unless thread.status
     end
+    server
   end
 
-  let(:celluloid_server) { Celluloid::IO::TCPServer.new example_addr, example_ssl_port }
+  let(:celluloid_server) { Celluloid::IO::TCPServer.new example_addr, example_port }
   let(:raw_server_thread) do
-    Thread.new { celluloid_server.accept }.tap do |thread|
+    server = Thread.new { celluloid_server.accept }.tap do |thread|
       Thread.pass while thread.status && thread.status != "sleep"
       thread.join unless thread.status
     end
+    server
   end
 
   context "duck typing ::SSLSocket" do
@@ -195,6 +210,7 @@ describe Celluloid::IO::SSLSocket do
 
   def with_ssl_sockets
     server_thread
+    sleep 0.222 # Needs time to spin up, or will throw out Errno::ECONNECTREFUSED to client.
     ssl_client.connect
 
     begin
@@ -210,6 +226,7 @@ describe Celluloid::IO::SSLSocket do
 
   def with_raw_sockets
     raw_server_thread
+    sleep 0.222 # Needs time to spin up, or will throw out Errno::ECONNECTREFUSED to client.
     client
 
     begin

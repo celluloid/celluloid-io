@@ -1,13 +1,7 @@
 require 'spec_helper'
 
 describe Celluloid::IO::UNIXServer do
-
-  if RUBY_PLATFORM == 'java'
-    before(:each) do
-      pending "jRuby support"
-      fail "Avoid potential deadlock under jRuby"
-    end
-  end
+  let(:example_port) { assign_port }
 
   describe "#accept" do
 
@@ -21,6 +15,7 @@ describe Celluloid::IO::UNIXServer do
       end
 
       it "accepts a connection and returns a Celluloid::IO::UNIXSocket" do
+        pending if RUBY_PLATFORM == 'java'
         with_unix_server do |subject|
           thread = Thread.new { UNIXSocket.new(example_unix_sock) }
           peer = within_io_actor { subject.accept }

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Celluloid::IO::UDPSocket do
   let(:payload) { 'ohai' }
+  let(:example_port) { assign_port }
   subject do
     Celluloid::IO::UDPSocket.new.tap do |sock|
       sock.bind example_addr, example_port

@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   Celluloid::Sync::Gemspec[gem]
   
-  gem.add_dependency 'nio4r',     '>= 1.1.0'
+  gem.add_dependency 'nio4r',     '>= 1.1'
 
   gem.add_development_dependency 'rb-fsevent', '~> 0.9.1' if RUBY_PLATFORM =~ /darwin/
 end

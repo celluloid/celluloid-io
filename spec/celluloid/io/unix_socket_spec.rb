@@ -10,6 +10,7 @@ describe Celluloid::IO::UNIXSocket do
   end
 
   let(:payload) { 'ohai' }
+  let(:example_port) { assign_port }
 
   context "inside Celluloid::IO" do
     it "connects to UNIX servers" do
@@ -99,7 +100,7 @@ describe Celluloid::IO::UNIXSocket do
 
     context 'eof?' do
       it "blocks actor then returns by close" do
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           started_at = Time.now
           Thread.new{ sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
@@ -108,7 +109,7 @@ describe Celluloid::IO::UNIXSocket do
       end
       
       it "blocks until gets the next byte" do
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           peer << 0x00
           peer.flush
           expect {
