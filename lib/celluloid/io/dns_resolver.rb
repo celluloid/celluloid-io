@@ -77,7 +77,7 @@ module Celluloid
       end
 
       def resolve_host(host)
-        resolve_ip(Resolv::IPv4, host) || resolve_ip(Resolv::IPv6, host)
+        resolve_ip(Resolv::IPv4, host) || get_address(host) || resolve_ip(Resolv::IPv6, host)
       end
 
       def resolve_ip(klass, host)
@@ -85,6 +85,13 @@ module Celluloid
           klass.create(host)
         rescue ArgumentError
         end
+      end
+
+      private
+
+      def get_address(host)
+        Resolv::Hosts.new(host).get_address.
+      rescue
       end
     end
   end
