@@ -1,11 +1,4 @@
-source 'https://rubygems.org'
-gemspec
+require File.expand_path("../culture/sync", __FILE__)
 
-group :test do
-  gem 'benchmark_suite'
-  gem 'rspec', '~> 3.2'
-  gem 'rspec-retry'
-end
+Celluloid::Sync::Gemfile[self]
 
-gem 'coveralls', require: false
-gem 'celluloid', github: 'celluloid/celluloid', branch: 'master'

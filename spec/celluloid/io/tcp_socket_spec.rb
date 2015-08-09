@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Celluloid::IO::TCPSocket do
   let(:payload) { 'ohai' }
+  let(:example_port) { assign_port }
 
   context "inside Celluloid::IO" do
 
@@ -11,7 +12,7 @@ describe Celluloid::IO::TCPSocket do
         thread = Thread.new { server.accept }
 
         socket = within_io_actor { Celluloid::IO::TCPSocket.open(example_addr, example_port) }
-        socket.should be_a(Celluloid::IO::TCPSocket)
+        expect(socket).to be_a(Celluloid::IO::TCPSocket)
 
         server.close
         thread.terminate
@@ -23,7 +24,7 @@ describe Celluloid::IO::TCPSocket do
           thread = Thread.new { server.accept }
   
           value = within_io_actor { Celluloid::IO::TCPSocket.open(example_addr, example_port) { true } }
-          value.should be_truthy
+          expect(value).to be_truthy
   
           server.close
           thread.terminate
@@ -38,7 +39,7 @@ describe Celluloid::IO::TCPSocket do
       peer = thread.value
 
       peer << payload
-      within_io_actor { socket.read(payload.size) }.should eq payload
+      expect(within_io_actor { socket.read(payload.size) }).to eq payload
 
       server.close
       socket.close
@@ -46,57 +47,57 @@ describe Celluloid::IO::TCPSocket do
     end
 
     it "should be evented" do
-      with_connected_sockets do |subject|
-        within_io_actor { Celluloid::IO.evented? }.should be_truthy
+      with_connected_sockets(example_port) do |subject|
+        expect(within_io_actor { Celluloid::IO.evented? }).to be_truthy
       end
     end
 
     it "read complete payload when nil size is given to #read" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload
-        within_io_actor { subject.read(nil) }.should eq payload
+        expect(within_io_actor { subject.read(nil) }).to eq payload
       end
     end
 
     it "read complete payload when no size is given to #read" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload
-        within_io_actor { subject.read }.should eq payload
+        expect(within_io_actor { subject.read }).to eq payload
       end
     end
 
     it "reads data" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload
-        within_io_actor { subject.read(payload.size) }.should eq payload
+        expect(within_io_actor { subject.read(payload.size) }).to eq payload
       end
     end
 
     it "reads data in binary encoding" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload
-        within_io_actor { subject.read(payload.size).encoding }.should eq Encoding::BINARY
+        expect(within_io_actor { subject.read(payload.size).encoding }).to eq Encoding::BINARY
       end
     end
 
     it "reads partial data" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload * 2
-        within_io_actor { subject.readpartial(payload.size) }.should eq payload
+        expect(within_io_actor { subject.readpartial(payload.size) }).to eq payload
       end
     end
 
     it "reads partial data in binary encoding" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload * 2
-        within_io_actor { subject.readpartial(payload.size).encoding }.should eq Encoding::BINARY
+        expect(within_io_actor { subject.readpartial(payload.size).encoding }).to eq Encoding::BINARY
       end
     end
 
     it "writes data" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         within_io_actor { subject << payload }
-        peer.read(payload.size).should eq payload
+        expect(peer.read(payload.size)).to eq payload
       end
     end
 
@@ -108,33 +109,33 @@ describe Celluloid::IO::TCPSocket do
 
     context 'eof?' do
       it "blocks actor then returns by close" do
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           started_at = Time.now
           Thread.new{ sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
-          (Time.now - started_at).should > 0.5
+          expect(Time.now - started_at).to be > 0.5
         end
       end
       
       it "blocks until gets the next byte" do
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           peer << 0x00
           peer.flush
           expect {
             within_io_actor {
               subject.read(1)
               Celluloid.timeout(0.5) {
-                subject.eof?.should be_false
+                expect(subject.eof?).to be_falsey
               }
             }
-          }.to raise_error(Celluloid::Task::TimeoutError)
+          }.to raise_error(Celluloid::TaskTimeout)
         end
       end
     end
 
     context "readpartial" do
       it "raises EOFError when reading from a closed socket" do
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           peer.close
           expect {
             within_io_actor { subject.readpartial(payload.size) }
@@ -145,7 +146,7 @@ describe Celluloid::IO::TCPSocket do
       it "raises IOError when active sockets are closed across threads" do
         pending "not implemented"
 
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           actor = ExampleActor.new
           begin
             read_future = actor.future.wrap do
@@ -162,7 +163,7 @@ describe Celluloid::IO::TCPSocket do
 
       it "raises IOError when partial reading from a socket the peer closed" do
         pending "async block running on receiver"
-        with_connected_sockets do |subject, peer|
+        with_connected_sockets(example_port) do |subject, peer|
           actor = ExampleActor.new
           begin
             actor.async.wrap { sleep 0.01; peer.close }
@@ -185,7 +186,7 @@ describe Celluloid::IO::TCPSocket do
       peer = thread.value
 
       peer << payload
-      socket.read(payload.size).should eq payload
+      expect(socket.read(payload.size)).to eq payload
 
       server.close
       socket.close
@@ -193,29 +194,29 @@ describe Celluloid::IO::TCPSocket do
     end
 
     it "should be blocking" do
-      with_connected_sockets do |subject|
-        Celluloid::IO.should_not be_evented
+      with_connected_sockets(example_port) do |subject|
+        expect(Celluloid::IO).not_to be_evented
       end
     end
 
     it "reads data" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload
-        subject.read(payload.size).should eq payload
+        expect(subject.read(payload.size)).to eq payload
       end
     end
 
     it "reads partial data" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         peer << payload * 2
-        subject.readpartial(payload.size).should eq payload
+        expect(subject.readpartial(payload.size)).to eq payload
       end
     end
 
     it "writes data" do
-      with_connected_sockets do |subject, peer|
+      with_connected_sockets(example_port) do |subject, peer|
         subject << payload
-        peer.read(payload.size).should eq payload
+        expect(peer.read(payload.size)).to eq payload
       end
     end
   end

@@ -1,19 +1,34 @@
 script: rake ci
+language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1.1
-  - ruby-head
+  - 2.2.0
+  - 2.2.2
   - jruby
+  - ruby-head
   - jruby-head
   - rbx-2
 
+# TODO: Put these back:
+# * CELLULOID_TASK_CLASS=Fibered
+# * CELLULOID_TASK_CLASS=Threaded
+# For right now the imporant thing is to test BACKPORTED mode:
+
 matrix:
+  fast_finish: true
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby
     - rvm: jruby-head
-    - rvm: rbx-2
+    - env: CELLULOID_BACKPORTED=true
+
+env:
+  matrix:
+    - CELLULOID_BACKPORTED=true
+    - CELLULOID_BACKPORTED=false
+  global:
+    - NUMBER_OF_PROCESSORS=2 CELLULOID_CONFIG_FILE=.env-ci
 
 notifications:
   irc: "irc.freenode.org#celluloid"
+
+sudo: false
+install: bundle install --without=development

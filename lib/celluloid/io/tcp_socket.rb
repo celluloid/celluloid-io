@@ -88,7 +88,7 @@ module Celluloid
           # HAX: for some reason we need to finish_connect ourselves on JRuby
           # This logic is unnecessary but JRuby still throws Errno::EINPROGRESS
           # if we retry the non-blocking connect instead of just finishing it
-          retry unless defined?(JRUBY_VERSION) && @socket.to_channel.finish_connect
+          retry unless RUBY_PLATFORM == 'java' && @socket.to_channel.finish_connect
         rescue Errno::EISCONN
           # We're now connected! Yay exceptions for flow control
           # NOTE: This is the approach the Ruby stdlib docs suggest ;_;
