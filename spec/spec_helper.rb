@@ -1,14 +1,9 @@
-require 'rubygems'
-require 'bundler/setup'
-require 'celluloid/io'
 require 'celluloid/rspec'
-require 'coveralls'
+require 'celluloid/io'
 
-Coveralls.wear!
+Dir[ *Specs::INCLUDE_PATHS ].map { |f| require f }
 
-MAX_TIME = 7
-MAX_ATTEMPTS = 20
-
+=begin
 logfile = File.open(File.expand_path("../../log/test.log", __FILE__), 'a')
 logfile.sync = true
 
@@ -21,7 +16,7 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
 
   config.around(:each) { |example|
-    Timeout.timeout(MAX_TIME) {
+    Timeout.timeout(Specs::MAX_EXECUTION) {
       example.run
     }
   }
@@ -33,6 +28,7 @@ RSpec.configure do |config|
     FileUtils.rm("/tmp/cell_sock") if File.exist?("/tmp/cell_sock")
   end
 end
+=end
 
 class ExampleActor
   include Celluloid::IO
@@ -50,7 +46,7 @@ def assign_port
   begin
     socket = ::TCPServer.new(example_addr, port)
   rescue Errno::ECONNREFUSED, Errno::EADDRINUSE => ex
-    raise ex.class.new("Tried #{attempts} times to assign port.") unless attempts < MAX_ATTEMPTS
+    raise ex.class.new("Tried #{attempts} times to assign port.") unless attempts < Specs::MAX_ATTEMPTS
     attempts += 1
     port += 1
     socket.close rescue nil

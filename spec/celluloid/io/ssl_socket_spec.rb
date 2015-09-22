@@ -23,11 +23,11 @@ describe Celluloid::IO::SSLSocket do
   let(:client) do
     attempts = 0
     socket = begin
-    Timeout.timeout(MAX_TIME) {
+    Timeout.timeout(Specs::MAX_EXECUTION) {
       begin
         TCPSocket.new example_addr, example_port
       rescue Errno::ECONNREFUSED
-        raise if attempts >= MAX_ATTEMPTS
+        raise if attempts >= Specs::MAX_ATTEMPTS
       attempts += 1
         # HAX: sometimes this fails to connect? o_O
         # ... This can often fail 20 times in a row ... so yeah
