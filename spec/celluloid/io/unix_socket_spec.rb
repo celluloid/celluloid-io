@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Celluloid::IO::UNIXSocket do
-  
+RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
+
   if RUBY_PLATFORM == 'java'
     before(:each) do
       pending "jRuby support"
@@ -11,6 +11,7 @@ describe Celluloid::IO::UNIXSocket do
 
   let(:payload) { 'ohai' }
   let(:example_port) { assign_port }
+  let(:logger) { Specs::FakeLogger.current }
 
   context "inside Celluloid::IO" do
     it "connects to UNIX servers" do
@@ -84,12 +85,14 @@ describe Celluloid::IO::UNIXSocket do
     end
 
     it "raises Errno::ENOENT when the connection is refused" do
+      allow(logger).to receive(:crash).with("Actor crashed!", Errno::ENOENT)
       expect {
         within_io_actor { Celluloid::IO::UNIXSocket.open(example_unix_sock) }
       }.to raise_error(Errno::ENOENT)
     end
 
     it "raises EOFError when partial reading from a closed socket" do
+      allow(logger).to receive(:crash).with("Actor crashed!", EOFError)
       with_connected_unix_sockets do |subject, peer|
         peer.close
         expect {
@@ -107,8 +110,9 @@ describe Celluloid::IO::UNIXSocket do
           expect(Time.now - started_at).to be > 0.5
         end
       end
-      
+
       it "blocks until gets the next byte" do
+        allow(logger).to receive(:crash).with("Actor crashed!", Celluloid::TaskTimeout)
         with_connected_sockets(example_port) do |subject, peer|
           peer << 0x00
           peer.flush

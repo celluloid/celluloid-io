@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Celluloid::IO::UNIXServer do
+RSpec.describe Celluloid::IO::UNIXServer, library: :IO do
   let(:example_port) { assign_port }
 
   describe "#accept" do

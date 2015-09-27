@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Celluloid::IO::TCPServer do
-  describe "#accept" do
+RSpec.describe Celluloid::IO::TCPServer, library: :IO do
+  context "#accept" do
     let(:payload) { 'ohai' }
     let(:example_port) { assign_port }
 

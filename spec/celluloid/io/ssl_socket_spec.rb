@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'openssl'
 
-describe Celluloid::IO::SSLSocket do
+RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
   let(:request)  { 'ping' }
   let(:response) { 'pong' }
 

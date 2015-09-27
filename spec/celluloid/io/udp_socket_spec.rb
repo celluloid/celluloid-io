@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Celluloid::IO::UDPSocket do
+RSpec.describe Celluloid::IO::UDPSocket, library: :IO do
   let(:payload) { 'ohai' }
   let(:example_port) { assign_port }
   subject do
