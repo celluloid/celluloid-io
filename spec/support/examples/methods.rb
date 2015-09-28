@@ -1,8 +1,10 @@
-def fixture_dir; Pathname.new File.expand_path("../../../fixtures", __FILE__); end
+def fixture_dir
+  Pathname.new File.expand_path("../../../fixtures", __FILE__)
+end
 
 # Would use Addrinfo(addr,0) but the class is missing/unstable on RBX.
 def assign_port
-  port = 12000 + Random.rand(1024)
+  port = 12_000 + Random.rand(1024)
   attempts = 0
   begin
     socket = ::TCPServer.new(example_addr, port)
@@ -19,8 +21,13 @@ ensure
   socket.close rescue nil
 end
 
-def example_addr; '127.0.0.1'; end
-def example_unix_sock; '/tmp/cell_sock'; end
+def example_addr
+  "127.0.0.1"
+end
+
+def example_unix_sock
+  "/tmp/cell_sock"
+end
 
 def within_io_actor(&block)
   actor = WrapperActor.new

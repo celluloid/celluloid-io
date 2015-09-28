@@ -5,7 +5,7 @@ module Specs
   ALLOW_SLOW_MAILBOXES = true # TODO: Remove hax.
 end
 
-require 'celluloid/rspec'
-require 'celluloid/io'
+require "celluloid/rspec"
+require "celluloid/io"
 
-Dir[ *Specs::INCLUDE_PATHS ].map { |f| require f }
+Dir[*Specs::INCLUDE_PATHS].map { |f| require f }

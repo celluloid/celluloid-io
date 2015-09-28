@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'bundler/setup'
-require 'celluloid/io'
+require "rubygems"
+require "bundler/setup"
+require "celluloid/io"
 
 class EchoClient
   include Celluloid::IO
@@ -18,7 +18,6 @@ class EchoClient
     @socket.write(s)
     @socket.readpartial(4096)
   end
-
 end
 
 client = EchoClient.new("127.0.0.1", 1234)

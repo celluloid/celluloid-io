@@ -1,4 +1,4 @@
-require 'nio'
+require "nio"
 
 module Celluloid
   module IO
@@ -29,24 +29,24 @@ module Celluloid
       # Wait for the given IO operation to complete
       def wait(io, set)
         # zomg ugly type conversion :(
-        unless io.is_a?(::IO) or io.is_a?(OpenSSL::SSL::SSLSocket)
+        unless io.is_a?(::IO) || io.is_a?(OpenSSL::SSL::SSLSocket)
           if io.respond_to? :to_io
             io = io.to_io
           elsif ::IO.respond_to? :try_convert
             io = ::IO.try_convert(io)
           end
 
-          raise TypeError, "can't convert #{io.class} into IO" unless io.is_a?(::IO)
+          fail TypeError, "can't convert #{io.class} into IO" unless io.is_a?(::IO)
         end
 
         monitor = @selector.register(io, set)
         monitor.value = Task.current
-        
+
         begin
           Task.suspend :iowait
         ensure
-          # In all cases we want to ensure that the monitor is closed once we 
-          # have woken up. However, in some cases, the monitor is already 
+          # In all cases we want to ensure that the monitor is closed once we
+          # have woken up. However, in some cases, the monitor is already
           # invalid, e.g. in the case that we are terminating. We catch this
           # case explicitly.
           monitor.close

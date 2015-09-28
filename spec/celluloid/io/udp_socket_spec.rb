@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::UDPSocket, library: :IO do
-  let(:payload) { 'ohai' }
+  let(:payload) { "ohai" }
   let(:example_port) { assign_port }
   subject do
     Celluloid::IO::UDPSocket.new.tap do |sock|

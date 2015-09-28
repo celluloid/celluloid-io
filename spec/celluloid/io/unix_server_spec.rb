@@ -1,11 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::UNIXServer, library: :IO do
   let(:example_port) { assign_port }
 
   describe "#accept" do
-
-    let(:payload) { 'ohai' }
+    let(:payload) { "ohai" }
 
     context "inside Celluloid::IO" do
       it "should be evented" do
@@ -15,7 +14,7 @@ RSpec.describe Celluloid::IO::UNIXServer, library: :IO do
       end
 
       it "accepts a connection and returns a Celluloid::IO::UNIXSocket" do
-        pending if RUBY_PLATFORM == 'java'
+        pending if RUBY_PLATFORM == "java"
         with_unix_server do |subject|
           thread = Thread.new { UNIXSocket.new(example_unix_sock) }
           peer = within_io_actor { subject.accept }
@@ -30,9 +29,9 @@ RSpec.describe Celluloid::IO::UNIXServer, library: :IO do
       it "raises if server already up" do
         with_unix_server do |subject|
           within_io_actor do
-            expect {
+            expect do
               Celluloid::IO::UNIXServer.open(example_unix_sock)
-            }.to raise_error(Errno::EADDRINUSE)
+            end.to raise_error(Errno::EADDRINUSE)
           end
         end
       end
@@ -58,12 +57,11 @@ RSpec.describe Celluloid::IO::UNIXServer, library: :IO do
 
         it "raises if server already up" do
           with_unix_server do |subject|
-            expect {
+            expect do
               Celluloid::IO::UNIXServer.open(example_unix_sock)
-            }.to raise_error(Errno::EADDRINUSE)
+            end.to raise_error(Errno::EADDRINUSE)
           end
         end
-
       end
     end
   end

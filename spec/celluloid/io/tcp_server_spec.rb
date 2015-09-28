@@ -1,8 +1,8 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::TCPServer, library: :IO do
   context "#accept" do
-    let(:payload) { 'ohai' }
+    let(:payload) { "ohai" }
     let(:example_port) { assign_port }
 
     it "can be initialized without a host" do

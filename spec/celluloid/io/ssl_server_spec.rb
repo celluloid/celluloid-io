@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::SSLServer, library: :IO do
   let(:client_cert) { OpenSSL::X509::Certificate.new fixture_dir.join("client.crt").read }
@@ -21,7 +21,7 @@ RSpec.describe Celluloid::IO::SSLServer, library: :IO do
   end
 
   describe "#accept" do
-    let(:payload) { 'ohai' }
+    let(:payload) { "ohai" }
 
     context "inside Celluloid::IO" do
       it "should be evented" do

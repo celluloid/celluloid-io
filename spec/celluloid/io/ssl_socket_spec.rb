@@ -1,9 +1,9 @@
-require 'spec_helper'
-require 'openssl'
+require "spec_helper"
+require "openssl"
 
 RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
-  let(:request)  { 'ping' }
-  let(:response) { 'pong' }
+  let(:request)  { "ping" }
+  let(:response) { "pong" }
 
   let(:example_port) { assign_port }
   let(:client_cert) { OpenSSL::X509::Certificate.new fixture_dir.join("client.crt").read }
@@ -15,28 +15,28 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
     end
   end
 
-  after(:each) {
+  after(:each) do
     client.close rescue nil
     server.close rescue nil
-  }
+  end
 
   let(:client) do
     attempts = 0
     socket = begin
-    Timeout.timeout(Specs::MAX_EXECUTION) {
-      begin
-        TCPSocket.new example_addr, example_port
-      rescue Errno::ECONNREFUSED
-        raise if attempts >= Specs::MAX_ATTEMPTS
-      attempts += 1
-        # HAX: sometimes this fails to connect? o_O
-        # ... This can often fail 20 times in a row ... so yeah
-        # This is quite likely due to the Thread.pass style spinlocks for startup
-        # Seems gimpy, but sleep and retry
-        sleep 0.0126
-        retry
+      Timeout.timeout(Specs::MAX_EXECUTION) do
+        begin
+          TCPSocket.new example_addr, example_port
+        rescue Errno::ECONNREFUSED
+          raise if attempts >= Specs::MAX_ATTEMPTS
+          attempts += 1
+          # HAX: sometimes this fails to connect? o_O
+          # ... This can often fail 20 times in a row ... so yeah
+          # This is quite likely due to the Thread.pass style spinlocks for startup
+          # Seems gimpy, but sleep and retry
+          sleep 0.0126
+          retry
+        end
       end
-    }
     rescue => ex
       attempted = "Tried #{attempts} times to instantiate socket."
       raise ex.class.new(attempted)
@@ -77,7 +77,7 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
   context "duck typing ::SSLSocket" do
     it "responds to #peeraddr" do
       with_ssl_sockets do |ssl_client, ssl_peer|
-        expect{ ssl_client.peeraddr }.to_not raise_error
+        expect { ssl_client.peeraddr }.to_not raise_error
       end
     end
   end
@@ -96,7 +96,7 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
     end
 
     it "starts SSL on a connected TCP socket" do
-      if RUBY_PLATFORM == 'java'
+      if RUBY_PLATFORM == "java"
         pending "JRuby support"
         fail "Bypassing potential deadlock."
       end
@@ -136,7 +136,7 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
     end
 
     it "starts SSL on a connected TCP socket" do
-      if RUBY_PLATFORM == 'java'
+      if RUBY_PLATFORM == "java"
         pending "JRuby support"
         fail "Bypassing potential deadlock."
       end
@@ -164,7 +164,7 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
 
   it "knows its cert" do
     # FIXME: seems bad? o_O
-    pending "wtf is wrong with this on JRuby" if RUBY_PLATFORM == 'java'
+    pending "wtf is wrong with this on JRuby" if RUBY_PLATFORM == "java"
     with_ssl_sockets do |ssl_client|
       expect(ssl_client.cert.to_der).to eq(client_cert.to_der)
     end
@@ -192,7 +192,7 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
 
   it "knows its client_ca" do
     # jruby-openssl does not implement this method
-    pending "jruby-openssl support" if RUBY_PLATFORM == 'java'
+    pending "jruby-openssl support" if RUBY_PLATFORM == "java"
 
     with_ssl_sockets do |ssl_client|
       expect(ssl_client.client_ca).to eq(ssl_client.to_io.client_ca)
@@ -201,7 +201,7 @@ RSpec.describe Celluloid::IO::SSLSocket, library: :IO do
 
   it "verifies peer certificates" do
     # FIXME: JRuby seems to be giving the wrong result here o_O
-    pending "jruby-openssl support" if RUBY_PLATFORM == 'java'
+    pending "jruby-openssl support" if RUBY_PLATFORM == "java"
 
     with_ssl_sockets do |ssl_client, ssl_peer|
       expect(ssl_client.verify_result).to eq(OpenSSL::X509::V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT)

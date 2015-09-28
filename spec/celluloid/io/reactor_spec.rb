@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::Reactor, library: :IO do
   let(:payload) { "balls" }

@@ -1,15 +1,14 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
-
-  if RUBY_PLATFORM == 'java'
+  if RUBY_PLATFORM == "java"
     before(:each) do
       pending "jRuby support"
       fail "Avoid potential deadlock under jRuby"
     end
   end
 
-  let(:payload) { 'ohai' }
+  let(:payload) { "ohai" }
   let(:example_port) { assign_port }
   let(:logger) { Specs::FakeLogger.current }
 
@@ -86,26 +85,26 @@ RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
 
     it "raises Errno::ENOENT when the connection is refused" do
       allow(logger).to receive(:crash).with("Actor crashed!", Errno::ENOENT)
-      expect {
+      expect do
         within_io_actor { Celluloid::IO::UNIXSocket.open(example_unix_sock) }
-      }.to raise_error(Errno::ENOENT)
+      end.to raise_error(Errno::ENOENT)
     end
 
     it "raises EOFError when partial reading from a closed socket" do
       allow(logger).to receive(:crash).with("Actor crashed!", EOFError)
       with_connected_unix_sockets do |subject, peer|
         peer.close
-        expect {
+        expect do
           within_io_actor { subject.readpartial(payload.size) }
-        }.to raise_error(EOFError)
+        end.to raise_error(EOFError)
       end
     end
 
-    context 'eof?' do
+    context "eof?" do
       it "blocks actor then returns by close" do
         with_connected_sockets(example_port) do |subject, peer|
           started_at = Time.now
-          Thread.new{ sleep 0.5; peer.close; }
+          Thread.new { sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
           expect(Time.now - started_at).to be > 0.5
         end
@@ -116,14 +115,14 @@ RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
         with_connected_sockets(example_port) do |subject, peer|
           peer << 0x00
           peer.flush
-          expect {
-            within_io_actor {
+          expect do
+            within_io_actor do
               subject.read(1)
-              Celluloid.timeout(0.5) {
+              Celluloid.timeout(0.5) do
                 expect(subject.eof?).to be_falsey
-              }
-            }
-          }.to raise_error(Celluloid::TaskTimeout)
+              end
+            end
+          end.to raise_error(Celluloid::TaskTimeout)
         end
       end
     end

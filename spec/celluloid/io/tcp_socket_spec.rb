@@ -1,12 +1,11 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Celluloid::IO::TCPSocket, library: :IO do
-  let(:payload) { 'ohai' }
+  let(:payload) { "ohai" }
   let(:example_port) { assign_port }
   let(:logger) { Specs::FakeLogger.current }
 
   context "inside Celluloid::IO" do
-
     describe ".open" do
       it "returns the open socket" do
         server = ::TCPServer.new example_addr, example_port
@@ -104,16 +103,16 @@ RSpec.describe Celluloid::IO::TCPSocket, library: :IO do
 
     it "raises Errno::ECONNREFUSED when the connection is refused" do
       allow(logger).to receive(:crash).with("Actor crashed!", Errno::ECONNREFUSED)
-      expect {
+      expect do
         within_io_actor { ::TCPSocket.new(example_addr, example_port) }
-      }.to raise_error(Errno::ECONNREFUSED)
+      end.to raise_error(Errno::ECONNREFUSED)
     end
 
-    context 'eof?' do
+    context "eof?" do
       it "blocks actor then returns by close" do
         with_connected_sockets(example_port) do |subject, peer|
           started_at = Time.now
-          Thread.new{ sleep 0.5; peer.close; }
+          Thread.new { sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
           expect(Time.now - started_at).to be > 0.5
         end
@@ -124,14 +123,14 @@ RSpec.describe Celluloid::IO::TCPSocket, library: :IO do
         with_connected_sockets(example_port) do |subject, peer|
           peer << 0x00
           peer.flush
-          expect {
-            within_io_actor {
+          expect do
+            within_io_actor do
               subject.read(1)
-              Celluloid.timeout(0.5) {
+              Celluloid.timeout(0.5) do
                 expect(subject.eof?).to be_falsey
-              }
-            }
-          }.to raise_error(Celluloid::TaskTimeout)
+              end
+            end
+          end.to raise_error(Celluloid::TaskTimeout)
         end
       end
     end
@@ -141,9 +140,9 @@ RSpec.describe Celluloid::IO::TCPSocket, library: :IO do
         allow(logger).to receive(:crash).with("Actor crashed!", EOFError)
         with_connected_sockets(example_port) do |subject, peer|
           peer.close
-          expect {
+          expect do
             within_io_actor { subject.readpartial(payload.size) }
-          }.to raise_error(EOFError)
+          end.to raise_error(EOFError)
         end
       end
 

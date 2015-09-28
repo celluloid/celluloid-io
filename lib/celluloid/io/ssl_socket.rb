@@ -1,4 +1,4 @@
-require 'openssl'
+require "openssl"
 
 module Celluloid
   module IO
@@ -7,19 +7,19 @@ module Celluloid
       extend Forwardable
 
       def_delegators :@socket,
-        :read_nonblock,
-        :write_nonblock,
-        :close,
-        :closed?,
-        :cert,
-        :cipher,
-        :client_ca,
-        :peeraddr,
-        :peer_cert,
-        :peer_cert_chain,
-        :post_connection_check,
-        :verify_result,
-        :sync_close=
+                     :read_nonblock,
+                     :write_nonblock,
+                     :close,
+                     :closed?,
+                     :cert,
+                     :cipher,
+                     :client_ca,
+                     :peeraddr,
+                     :peer_cert,
+                     :peer_cert_chain,
+                     :post_connection_check,
+                     :verify_result,
+                     :sync_close=
 
       def initialize(io, ctx = OpenSSL::SSL::SSLContext.new)
         super()
@@ -47,7 +47,9 @@ module Celluloid
         retry
       end
 
-      def to_io; @socket; end
+      def to_io
+        @socket
+      end
     end
   end
 end
