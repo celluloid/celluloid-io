@@ -1,5 +1,15 @@
-HEAD
+0.17.2 (2015-09-28)
 -----
+* Revamped test suite, using shared RSpec configuration layer provided by Celluloid itself.
+* Updated gem dependencies provided by Celluloid::Sync... extraneous gems removed, or marked as development dependencies.
+
+0.17.1 (2015-08-24)
+-----
+* Minor bug fixes. Synchronize gem dependencies.
+
+0.17.0 (2015-08-07)
+-----
+* Compatibility with Celluloid 0.17.0+
 * Adjust class name for Celluloid::Mailbox::Evented, per 0.17.0 of Celluloid.
 
 0.16.2 (2015-01-30)
