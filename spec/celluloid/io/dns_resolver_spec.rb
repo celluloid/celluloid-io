@@ -7,12 +7,12 @@ RSpec.describe Celluloid::IO::DNSResolver, library: :IO do
       # disabled, thus .nameservers would return nil
       expect(Celluloid::IO::DNSResolver).to receive(:nameservers).at_most(:once) { nil }
       resolver = Celluloid::IO::DNSResolver.new
-      expect(resolver.resolve("localhost")).to eq Resolv::IPv4.create("127.0.0.1")
+      expect(resolver.resolve("localhost")).to eq(Resolv::IPv4.create("127.0.0.1")).or eq(Resolv::IPv6.create("::1"))
     end
 
     it "resolves hostnames" do
       resolver = Celluloid::IO::DNSResolver.new
-      expect(resolver.resolve("localhost")).to eq Resolv::IPv4.create("127.0.0.1")
+      expect(resolver.resolve("localhost")).to eq(Resolv::IPv4.create("127.0.0.1")).or eq(Resolv::IPv6.create("::1"))
     end
 
     it "resolves domain names" do
