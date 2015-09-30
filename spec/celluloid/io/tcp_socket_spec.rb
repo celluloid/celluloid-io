@@ -1,11 +1,11 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe Celluloid::IO::TCPSocket do
-  let(:payload) { 'ohai' }
+RSpec.describe Celluloid::IO::TCPSocket, library: :IO do
+  let(:payload) { "ohai" }
   let(:example_port) { assign_port }
+  let(:logger) { Specs::FakeLogger.current }
 
   context "inside Celluloid::IO" do
-
     describe ".open" do
       it "returns the open socket" do
         server = ::TCPServer.new example_addr, example_port
@@ -22,10 +22,10 @@ describe Celluloid::IO::TCPSocket do
         it "returns the block evaluation" do
           server = ::TCPServer.new example_addr, example_port
           thread = Thread.new { server.accept }
-  
+
           value = within_io_actor { Celluloid::IO::TCPSocket.open(example_addr, example_port) { true } }
           expect(value).to be_truthy
-  
+
           server.close
           thread.terminate
         end
@@ -102,44 +102,47 @@ describe Celluloid::IO::TCPSocket do
     end
 
     it "raises Errno::ECONNREFUSED when the connection is refused" do
-      expect {
+      allow(logger).to receive(:crash).with("Actor crashed!", Errno::ECONNREFUSED)
+      expect do
         within_io_actor { ::TCPSocket.new(example_addr, example_port) }
-      }.to raise_error(Errno::ECONNREFUSED)
+      end.to raise_error(Errno::ECONNREFUSED)
     end
 
-    context 'eof?' do
+    context "eof?" do
       it "blocks actor then returns by close" do
         with_connected_sockets(example_port) do |subject, peer|
           started_at = Time.now
-          Thread.new{ sleep 0.5; peer.close; }
+          Thread.new { sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
           expect(Time.now - started_at).to be > 0.5
         end
       end
-      
+
       it "blocks until gets the next byte" do
+        allow(logger).to receive(:crash).with("Actor crashed!", Celluloid::TaskTimeout)
         with_connected_sockets(example_port) do |subject, peer|
           peer << 0x00
           peer.flush
-          expect {
-            within_io_actor {
+          expect do
+            within_io_actor do
               subject.read(1)
-              Celluloid.timeout(0.5) {
+              Celluloid.timeout(0.5) do
                 expect(subject.eof?).to be_falsey
-              }
-            }
-          }.to raise_error(Celluloid::TaskTimeout)
+              end
+            end
+          end.to raise_error(Celluloid::TaskTimeout)
         end
       end
     end
 
     context "readpartial" do
       it "raises EOFError when reading from a closed socket" do
+        allow(logger).to receive(:crash).with("Actor crashed!", EOFError)
         with_connected_sockets(example_port) do |subject, peer|
           peer.close
-          expect {
+          expect do
             within_io_actor { subject.readpartial(payload.size) }
-          }.to raise_error(EOFError)
+          end.to raise_error(EOFError)
         end
       end
 
@@ -147,7 +150,8 @@ describe Celluloid::IO::TCPSocket do
         pending "not implemented"
 
         with_connected_sockets(example_port) do |subject, peer|
-          actor = ExampleActor.new
+          actor = with_wrapper_actor
+          allow(logger).to receive(:crash).with("Actor crashed!", IOError)
           begin
             read_future = actor.future.wrap do
               subject.readpartial(payload.size)
@@ -164,7 +168,8 @@ describe Celluloid::IO::TCPSocket do
       it "raises IOError when partial reading from a socket the peer closed" do
         pending "async block running on receiver"
         with_connected_sockets(example_port) do |subject, peer|
-          actor = ExampleActor.new
+          actor = with_wrapper_actor
+          allow(logger).to receive(:crash).with("Actor crashed!", IOError)
           begin
             actor.async.wrap { sleep 0.01; peer.close }
             expect do

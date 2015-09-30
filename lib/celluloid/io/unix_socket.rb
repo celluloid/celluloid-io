@@ -1,4 +1,4 @@
-require 'socket'
+require "socket"
 
 module Celluloid
   module IO
@@ -10,7 +10,7 @@ module Celluloid
 
       # Open a UNIX connection.
       def self.open(socket_path, &block)
-        self.new(socket_path, &block)
+        new(socket_path, &block)
       end
 
       # Convert a Ruby UNIXSocket into a Celluloid::IO::UNIXSocket
@@ -31,9 +31,9 @@ module Celluloid
 
         # FIXME: not doing non-blocking connect
         @socket = if block
-          ::UNIXSocket.open(socket_path, &block)
-        else
-          ::UNIXSocket.new(socket_path)
+                    ::UNIXSocket.open(socket_path, &block)
+                  else
+                    ::UNIXSocket.new(socket_path)
         end
       end
 

@@ -1,5 +1,5 @@
-require 'socket'
-require 'resolv'
+require "socket"
+require "resolv"
 
 module Celluloid
   module IO
@@ -12,7 +12,7 @@ module Celluloid
 
       # Open a TCP socket, yielding it to the given block and closing it
       # automatically when done (if a block is given)
-      def self.open(*args, &block)
+      def self.open(*args, &_block)
         sock = new(*args)
         return sock unless block_given?
 
@@ -41,7 +41,7 @@ module Celluloid
           @socket = remote_host
           return
         elsif remote_port.nil?
-          raise ArgumentError, "wrong number of arguments (1 for 2)"
+          fail ArgumentError, "wrong number of arguments (1 for 2)"
         end
 
         # Is it an IPv4 address?
@@ -61,7 +61,7 @@ module Celluloid
         # Guess it's not an IP address, so let's try DNS
         unless @addr
           addrs = Array(DNSResolver.new.resolve(remote_host))
-          raise Resolv::ResolvError, "DNS result has no information for #{remote_host}" if addrs.empty?
+          fail Resolv::ResolvError, "DNS result has no information for #{remote_host}" if addrs.empty?
 
           # Pseudorandom round-robin DNS support :/
           @addr = addrs[rand(addrs.size)]
@@ -72,7 +72,7 @@ module Celluloid
           family = Socket::AF_INET
         when Resolv::IPv6
           family = Socket::AF_INET6
-        else raise ArgumentError, "unsupported address class: #{@addr.class}"
+        else fail ArgumentError, "unsupported address class: #{@addr.class}"
         end
 
         @socket = Socket.new(family, Socket::SOCK_STREAM, 0)
@@ -88,7 +88,7 @@ module Celluloid
           # HAX: for some reason we need to finish_connect ourselves on JRuby
           # This logic is unnecessary but JRuby still throws Errno::EINPROGRESS
           # if we retry the non-blocking connect instead of just finishing it
-          retry unless RUBY_PLATFORM == 'java' && @socket.to_channel.finish_connect
+          retry unless RUBY_PLATFORM == "java" && @socket.to_channel.finish_connect
         rescue Errno::EISCONN
           # We're now connected! Yay exceptions for flow control
           # NOTE: This is the approach the Ruby stdlib docs suggest ;_;
@@ -101,14 +101,14 @@ module Celluloid
 
       # Receives a message
       def recv(maxlen, flags = nil)
-        raise NotImplementedError, "flags not supported" if flags && !flags.zero?
+        fail NotImplementedError, "flags not supported" if flags && !flags.zero?
         readpartial(maxlen)
       end
 
       # Send a message
       def send(msg, flags, dest_sockaddr = nil)
-        raise NotImplementedError, "dest_sockaddr not supported" if dest_sockaddr
-        raise NotImplementedError, "flags not supported" unless flags.zero?
+        fail NotImplementedError, "dest_sockaddr not supported" if dest_sockaddr
+        fail NotImplementedError, "flags not supported" unless flags.zero?
         write(msg)
       end
     end

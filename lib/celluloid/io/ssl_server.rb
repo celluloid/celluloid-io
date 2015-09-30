@@ -1,4 +1,4 @@
-require 'socket'
+require "socket"
 
 module Celluloid
   module IO
@@ -33,4 +33,3 @@ module Celluloid
     end
   end
 end
-

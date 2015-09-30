@@ -1,5 +1,5 @@
-require 'bundler/setup'
-require 'celluloid/io'
+require "bundler/setup"
+require "celluloid/io"
 
 class EchoUNIXClient
   include Celluloid::IO
@@ -22,7 +22,6 @@ class EchoUNIXClient
   def finalize
     @socket.close if @socket
   end
-
 end
 
 c = EchoUNIXClient.new("/tmp/sock_test")

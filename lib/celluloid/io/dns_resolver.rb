@@ -1,5 +1,5 @@
-require 'ipaddr'
-require 'resolv'
+require "ipaddr"
+require "resolv"
 
 module Celluloid
   module IO
@@ -35,7 +35,7 @@ module Celluloid
       def resolve(hostname)
         if host = resolve_hostname(hostname)
           unless ip_address = resolve_host(host)
-            raise Resolv::ResolvError, "invalid entry in hosts file: #{host}"
+            fail Resolv::ResolvError, "invalid entry in hosts file: #{host}"
           end
           return ip_address
         end
@@ -61,7 +61,8 @@ module Celluloid
         # Resolv::Hosts#getaddresses pushes onto a stack
         # so since we want the first occurance, simply
         # pop off the stack.
-        resolv.getaddresses(hostname).pop rescue nil
+        resolv.getaddresses(hostname).pop
+      rescue
       end
 
       def resolv
@@ -81,16 +82,14 @@ module Celluloid
       end
 
       def resolve_ip(klass, host)
-        begin
-          klass.create(host)
-        rescue ArgumentError
-        end
+        klass.create(host)
+      rescue ArgumentError
       end
 
       private
 
       def get_address(host)
-        Resolv::Hosts.new(host).get_address.
+        Resolv::Hosts.new(host).getaddress
       rescue
       end
     end

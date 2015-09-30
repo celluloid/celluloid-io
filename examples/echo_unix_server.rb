@@ -1,5 +1,5 @@
-require 'bundler/setup'
-require 'celluloid/io'
+require "bundler/setup"
+require "celluloid/io"
 
 class EchoUNIXServer
   include Celluloid::IO
@@ -38,7 +38,6 @@ class EchoUNIXServer
       File.delete(@socket_path)
     end
   end
-
 end
 
 supervisor = EchoUNIXServer.supervise("/tmp/sock_test")

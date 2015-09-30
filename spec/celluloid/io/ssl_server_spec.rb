@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe Celluloid::IO::SSLServer do
+RSpec.describe Celluloid::IO::SSLServer, library: :IO do
   let(:client_cert) { OpenSSL::X509::Certificate.new fixture_dir.join("client.crt").read }
   let(:client_key)  { OpenSSL::PKey::RSA.new fixture_dir.join("client.key").read }
   let(:client_context) do
@@ -9,7 +9,7 @@ describe Celluloid::IO::SSLServer do
       context.key  = client_key
     end
   end
-  
+
   let(:example_port) { assign_port }
   let(:server_cert) { OpenSSL::X509::Certificate.new fixture_dir.join("server.crt").read }
   let(:server_key)  { OpenSSL::PKey::RSA.new fixture_dir.join("server.key").read }
@@ -21,7 +21,7 @@ describe Celluloid::IO::SSLServer do
   end
 
   describe "#accept" do
-    let(:payload) { 'ohai' }
+    let(:payload) { "ohai" }
 
     context "inside Celluloid::IO" do
       it "should be evented" do
@@ -89,4 +89,3 @@ describe Celluloid::IO::SSLServer do
     end
   end
 end
-

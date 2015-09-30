@@ -2,8 +2,8 @@
 #
 # Run this as: bundle exec examples/echo_server.rb
 
-require 'bundler/setup'
-require 'celluloid/io'
+require "bundler/setup"
+require "celluloid/io"
 
 class EchoServer
   include Celluloid::IO
