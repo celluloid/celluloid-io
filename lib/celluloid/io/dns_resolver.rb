@@ -61,7 +61,8 @@ module Celluloid
         # Resolv::Hosts#getaddresses pushes onto a stack
         # so since we want the first occurance, simply
         # pop off the stack.
-        resolv.getaddresses(hostname).pop rescue nil
+        resolv.getaddresses(hostname).pop
+      rescue
       end
 
       def resolv
@@ -81,17 +82,15 @@ module Celluloid
       end
 
       def resolve_ip(klass, host)
-
         klass.create(host)
       rescue ArgumentError
-
       end
 
       private
 
       def get_address(host)
-        Resolv::Hosts.new(host).get_address
-          .rescue
+        Resolv::Hosts.new(host).getaddress
+      rescue
       end
     end
   end
