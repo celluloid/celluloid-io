@@ -9,7 +9,6 @@ module Celluloid
       def_delegators :@socket,
                      :read_nonblock,
                      :write_nonblock,
-                     :close,
                      :closed?,
                      :cert,
                      :cipher,
