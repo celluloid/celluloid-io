@@ -309,7 +309,7 @@ module Celluloid
       # Closes the stream and flushes any unwritten data.
       def close
         flush rescue nil
-        sysclose
+        to_io.close
       end
 
       #######

@@ -7,7 +7,7 @@ module Celluloid
     class TCPSocket < Stream
       extend Forwardable
 
-      def_delegators :@socket, :read_nonblock, :write_nonblock, :close, :close_read, :close_write, :closed?
+      def_delegators :@socket, :read_nonblock, :write_nonblock, :close_read, :close_write, :closed?
       def_delegators :@socket, :addr, :peeraddr, :setsockopt, :getsockname
 
       # Open a TCP socket, yielding it to the given block and closing it
