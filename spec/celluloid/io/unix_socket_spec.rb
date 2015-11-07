@@ -102,7 +102,7 @@ RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
 
     context "eof?" do
       it "blocks actor then returns by close" do
-        with_connected_sockets(example_port) do |subject, peer|
+        with_connected_unix_sockets do |subject, peer|
           started_at = Time.now
           Thread.new { sleep 0.5; peer.close; }
           within_io_actor { subject.eof? }
@@ -112,7 +112,7 @@ RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
 
       it "blocks until gets the next byte" do
         allow(logger).to receive(:crash).with("Actor crashed!", Celluloid::TaskTimeout)
-        with_connected_sockets(example_port) do |subject, peer|
+        with_connected_unix_sockets do |subject, peer|
           peer << 0x00
           peer.flush
           expect do
