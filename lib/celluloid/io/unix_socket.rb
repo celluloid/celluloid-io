@@ -6,7 +6,7 @@ module Celluloid
     class UNIXSocket < Stream
       extend Forwardable
 
-      def_delegators :@socket, :read_nonblock, :write_nonblock, :closed?, :readline, :puts, :addr
+      def_delegators :@socket, :read_nonblock, :write_nonblock, :closed?, :addr
 
       # Open a UNIX connection.
       def self.open(socket_path, &block)

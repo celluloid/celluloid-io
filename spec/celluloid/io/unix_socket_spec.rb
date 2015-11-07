@@ -171,4 +171,33 @@ RSpec.describe Celluloid::IO::UNIXSocket, library: :IO do
       end
     end
   end
+
+  context 'puts' do
+    it 'uses the write buffer' do
+      with_connected_unix_sockets do |subject, peer|
+        subject.sync = false
+        subject << "a"
+        subject.puts "b"
+        subject << "c"
+        subject.flush
+        subject.close
+        expect(peer.read).to eq "ab\nc"
+      end
+    end
+  end
+
+  context 'readline' do
+    it 'uses the read buffer' do
+      with_connected_unix_sockets do |subject, peer|
+        peer << "xline one\nline two\n"
+        subject.getc # read one character to fill buffer
+        Timeout::timeout(1){
+          # this will block if the buffer is not used
+          expect(subject.readline).to eq "line one\n"
+          expect(subject.readline).to eq "line two\n"
+        }
+      end
+    end
+  end
+
 end
