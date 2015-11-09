@@ -8,7 +8,7 @@
 module Celluloid
   module IO
     # Base class of all streams in Celluloid::IO
-    class Stream
+    class Stream < Socket
       include Enumerable
 
       # The "sync mode" of the stream
@@ -16,7 +16,8 @@ module Celluloid
       # See IO#sync for full details.
       attr_accessor :sync
 
-      def initialize
+      def initialize( socket )
+        super
         @eof  = false
         @sync = true
         @read_buffer = ''.force_encoding(Encoding::ASCII_8BIT)
@@ -309,7 +310,7 @@ module Celluloid
       # Closes the stream and flushes any unwritten data.
       def close
         flush rescue nil
-        to_io.close
+        super
       end
 
       #######
