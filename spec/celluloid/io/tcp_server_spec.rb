@@ -28,6 +28,31 @@ RSpec.describe Celluloid::IO::TCPServer, library: :IO do
         end
       end
 
+      it "sends information to the client later" do
+        class LaterActor < ExampleActor
+          def send_later(socket)
+            peer = socket.accept
+            after(0.4) { peer.write "1" }
+            after(0.4) { peer.write "2" }
+            peer
+          end
+        end
+        with_tcp_server do |subject|
+          thread = Thread.new { TCPSocket.new(example_addr, example_port) }
+          actor = LaterActor.new
+          begin
+            peer = actor.send_later(subject)
+            client = thread.value
+            client.write payload
+            peer.read(payload.size).should eq payload # confirm the client read
+            Timeout::timeout(1) { client.read(4).should eq "1" }
+            Timeout::timeout(2) { client.read(4).should eq "2" }
+          ensure
+            actor.terminate if actor.alive?
+          end
+        end
+      end
+
       context "outside Celluloid::IO" do
         it "should be blocking" do
           with_tcp_server(example_port) do |subject|
