@@ -49,7 +49,7 @@ module Celluloid
           # have woken up. However, in some cases, the monitor is already
           # invalid, e.g. in the case that we are terminating. We catch this
           # case explicitly.
-          monitor.close
+          monitor.close unless monitor.closed?
         end
       end
 
