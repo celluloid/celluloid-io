@@ -29,7 +29,9 @@ RSpec.describe Celluloid::IO::TCPServer, library: :IO do
       end
 
       it "sends information to the client later" do
-        class LaterActor < ExampleActor
+        class LaterActor
+          include Celluloid::IO
+          
           def send_later(socket)
             peer = socket.accept
             after(0.4) { peer.write "1" }
