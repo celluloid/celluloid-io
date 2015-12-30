@@ -39,16 +39,16 @@ RSpec.describe Celluloid::IO::TCPServer, library: :IO do
             peer
           end
         end
-        with_tcp_server do |subject|
+        with_tcp_server(example_port) do |subject|
           thread = Thread.new { TCPSocket.new(example_addr, example_port) }
           actor = LaterActor.new
           begin
             peer = actor.send_later(subject)
             client = thread.value
             client.write payload
-            peer.read(payload.size).should eq payload # confirm the client read
-            Timeout::timeout(1) { client.read(4).should eq "1" }
-            Timeout::timeout(2) { client.read(4).should eq "2" }
+            expect(peer.read(payload.size)).to eq payload # confirm the client read
+            Timeout::timeout(1) { expect(client.read(1)).to eq "1" }
+            Timeout::timeout(2) { expect(client.read(1)).to eq "2" }
           ensure
             actor.terminate if actor.alive?
           end
