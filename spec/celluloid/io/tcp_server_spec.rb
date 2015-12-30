@@ -39,7 +39,7 @@ RSpec.describe Celluloid::IO::TCPServer, library: :IO do
             peer
           end
         end
-        with_tcp_server do |subject|
+        with_tcp_server(example_port) do |subject|
           thread = Thread.new { TCPSocket.new(example_addr, example_port) }
           actor = LaterActor.new
           begin
