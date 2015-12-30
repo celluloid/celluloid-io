@@ -2,12 +2,14 @@ require "spec_helper"
 
 RSpec.describe Celluloid::IO, library: :IO do
   it_behaves_like "a Celluloid Actor", Celluloid::IO do
+    let(:example_port) { assign_port }
+
     context :timeouts do
       let :sleeping_actor_class do
         Class.new do
           include Celluloid::IO
-          def initialize
-            @server = Celluloid::IO::TCPServer.new(example_addr, example_port)
+          def initialize(addr, port)
+            @server = Celluloid::IO::TCPServer.new(addr, port)
             async { @server.accept ; sleep 10 }
           end
         end
@@ -15,8 +17,8 @@ RSpec.describe Celluloid::IO, library: :IO do
       let :foo_actor_class do
         Class.new do
           include Celluloid::IO
-          def initialize
-            @sock = Celluloid::IO::TCPSocket.new(example_addr, example_port)
+          def initialize(addr, port)
+            @sock = Celluloid::IO::TCPSocket.new(addr, port)
           end
 
           # returns true if the operation timedout
@@ -44,8 +46,8 @@ RSpec.describe Celluloid::IO, library: :IO do
       end
 
       it "frees up the socket when a timeout error occurs" do
-        a1 = sleeping_actor_class.new
-        a2 = foo_actor_class.new
+        a1 = sleeping_actor_class.new(example_addr, example_port)
+        a2 = foo_actor_class.new(example_addr, example_port)
       
         a2.timedout_read(1).should be_true # this ensures that the socket timeouted trying to read
         a2.failed_write.should be_false # this ensures that the socket isn't usable anymore
