@@ -47,8 +47,8 @@ RSpec.describe Celluloid::IO::TCPServer, library: :IO do
             client = thread.value
             client.write payload
             expect(peer.read(payload.size)).to eq payload # confirm the client read
-            Timeout::timeout(1) { expect(client.read(4)).to eq "1" }
-            Timeout::timeout(2) { expect(client.read(4)).to eq "2" }
+            Timeout::timeout(1) { expect(client.read(1)).to eq "1" }
+            Timeout::timeout(2) { expect(client.read(1)).to eq "2" }
           ensure
             actor.terminate if actor.alive?
           end
