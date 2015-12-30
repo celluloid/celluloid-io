@@ -27,7 +27,7 @@ RSpec.describe Celluloid::IO, library: :IO do
               timeout(duration) do
                 @sock.wait_readable
               end
-            rescue Celluloid::Task::TimeoutError
+            rescue Celluloid::TaskTimeout
               return true
             end
             false
