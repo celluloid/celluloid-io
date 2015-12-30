@@ -16,7 +16,7 @@ module Celluloid
       # MSG_ options. The first element of the results, mesg, is the data
       # received. The second element, sender_addrinfo, contains
       # protocol-specific address information of the sender.
-      def recvfrom(maxlen, flags = nil)
+      def recvfrom(maxlen, flags = 0)
         begin
           if @socket.respond_to? :recvfrom_nonblock
             @socket.recvfrom_nonblock(maxlen, flags)
