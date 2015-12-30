@@ -49,8 +49,8 @@ RSpec.describe Celluloid::IO, library: :IO do
         a1 = sleeping_actor_class.new(example_addr, example_port)
         a2 = foo_actor_class.new(example_addr, example_port)
       
-        a2.timedout_read(1).should be_true # this ensures that the socket timeouted trying to read
-        a2.failed_write.should be_false # this ensures that the socket isn't usable anymore
+        expect(a2.timedout_read(1)).to eq true # this ensures that the socket timeouted trying to read
+        expect(a2.failed_write).to eq false # this ensures that the socket isn't usable anymore
       end
     end
   end
