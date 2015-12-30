@@ -3,6 +3,7 @@ language: ruby
 rvm:
   - rbx-2
   - jruby
+  - 2.3.0
   - 2.2.2
   - 2.2.0
   - 2.1.4
