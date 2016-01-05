@@ -1,12 +1,27 @@
 module Celluloid
   module IO
     # UDPSockets with combined blocking and evented support
-    class UDPSocket
+    class UDPSocket < Socket
       extend Forwardable
-      def_delegators :@socket, :addr, :bind, :connect, :send, :recvfrom_nonblock, :close, :closed?
+      def_delegators :to_io, :bind, :connect, :send, :recvfrom_nonblock
 
-      def initialize(address_family = ::Socket::AF_INET)
-        @socket = ::UDPSocket.new(address_family)
+      # @overload initialize( address_family )
+      #   Opens a new udp socket using address_family.
+      #   @param address_family [Numeric]
+      #
+      # @overload initialize( socket )
+      #   Wraps an already existing udp socket.
+      #   @param socket [::UDPSocket]
+      def initialize(*args)
+        if args.first.kind_of? ::BasicSocket
+          # socket
+          socket = args.first
+          fail ArgumentError, "wrong number of arguments (#{args.size} for 1)" if args.size != 1
+          fail ArgumentError, "wrong kind of socket (#{socket.class} for UDPSocket)" unless socket.kind_of? ::UDPSocket
+          super( socket )
+        else
+          super( ::UDPSocket.new(*args) )
+        end
       end
 
       # Wait until the socket is readable
@@ -18,11 +33,12 @@ module Celluloid
       # protocol-specific address information of the sender.
       def recvfrom(maxlen, flags = 0)
         begin
-          if @socket.respond_to? :recvfrom_nonblock
-            @socket.recvfrom_nonblock(maxlen, flags)
+          socket = to_io
+          if socket.respond_to? :recvfrom_nonblock
+            socket.recvfrom_nonblock(maxlen, flags)
           else
             # FIXME: hax for JRuby
-            @socket.recvfrom(maxlen, flags)
+            socket.recvfrom(maxlen, flags)
           end
         rescue ::IO::WaitReadable
           wait_readable
@@ -30,7 +46,6 @@ module Celluloid
         end
       end
 
-      def to_io; @socket; end
     end
   end
 end

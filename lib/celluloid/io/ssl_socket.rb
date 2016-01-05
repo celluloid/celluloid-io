@@ -6,10 +6,7 @@ module Celluloid
     class SSLSocket < Stream
       extend Forwardable
 
-      def_delegators :@socket,
-                     :read_nonblock,
-                     :write_nonblock,
-                     :closed?,
+      def_delegators :to_io,
                      :cert,
                      :cipher,
                      :client_ca,
@@ -21,14 +18,14 @@ module Celluloid
                      :sync_close=
 
       def initialize(io, ctx = OpenSSL::SSL::SSLContext.new)
-        super()
         @context = ctx
-        @socket = OpenSSL::SSL::SSLSocket.new(::IO.try_convert(io), @context)
-        @socket.sync_close = true if @socket.respond_to?(:sync_close=)
+        socket = OpenSSL::SSL::SSLSocket.new(::IO.try_convert(io), @context)
+        socket.sync_close = true if socket.respond_to?(:sync_close=)
+        super( socket )
       end
 
       def connect
-        @socket.connect_nonblock
+        to_io.connect_nonblock
         self
       rescue ::IO::WaitReadable
         wait_readable
@@ -36,7 +33,7 @@ module Celluloid
       end
 
       def accept
-        @socket.accept_nonblock
+        to_io.accept_nonblock
         self
       rescue ::IO::WaitReadable
         wait_readable
@@ -46,9 +43,6 @@ module Celluloid
         retry
       end
 
-      def to_io
-        @socket
-      end
     end
   end
 end
