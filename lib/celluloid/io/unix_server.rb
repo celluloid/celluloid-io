@@ -11,19 +11,19 @@ module Celluloid
         self.new(socket_path)
       end
 
-      # @overload initialize( socket_path )
+      # @overload initialize(socket_path)
       #   @param socket_path [String]
       #
-      # @overload initialize( socket )
+      # @overload initialize(socket)
       #   @param socket [::UNIXServer]
       def initialize(socket)
         if socket.kind_of? ::BasicSocket
           # socket
           fail ArgumentError, "wrong kind of socket (#{socket.class} for UNIXServer)" unless socket.kind_of? ::UNIXServer
-          super( socket )
+          super(socket)
         else
           begin
-            super( ::UNIXServer.new(socket) )
+            super(::UNIXServer.new(socket))
           rescue => ex
             # Translate the EADDRINUSE jRuby exception.
             raise unless RUBY_PLATFORM == 'java'

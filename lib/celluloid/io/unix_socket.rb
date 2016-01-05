@@ -20,7 +20,7 @@ module Celluloid
       def initialize(socket_path, &block)
         # Allow users to pass in a Ruby UNIXSocket directly
         if socket_path.is_a? ::UNIXSocket
-          super( socket_path )
+          super(socket_path)
           return
         end
 

@@ -21,7 +21,7 @@ module Celluloid
         @context = ctx
         socket = OpenSSL::SSL::SSLSocket.new(::IO.try_convert(io), @context)
         socket.sync_close = true if socket.respond_to?(:sync_close=)
-        super( socket )
+        super(socket)
       end
 
       def connect

@@ -143,8 +143,8 @@ RSpec.describe Celluloid::IO::Socket, library: :IO do
 
     context '.new' do
       it "creates basic sockets" do
-        socket = Celluloid::IO::Socket.new( Celluloid::IO::Socket::AF_INET, Celluloid::IO::Socket::SOCK_STREAM, 0 )
-        expect( socket ).to be_a ::Socket
+        socket = Celluloid::IO::Socket.new(Celluloid::IO::Socket::AF_INET, Celluloid::IO::Socket::SOCK_STREAM, 0)
+        expect(socket).to be_a ::Socket
         socket.close
       end
     end
@@ -152,8 +152,8 @@ RSpec.describe Celluloid::IO::Socket, library: :IO do
     context '.pair' do
       it "creates basic sockets" do
         a,b = Celluloid::IO::Socket.pair( Celluloid::IO::Socket::AF_UNIX, Celluloid::IO::Socket::SOCK_DGRAM, 0)
-        expect( a ).to be_a ::Socket
-        expect( b ).to be_a ::Socket
+        expect(a).to be_a ::Socket
+        expect(b).to be_a ::Socket
         a.close
         b.close
       end
@@ -161,9 +161,9 @@ RSpec.describe Celluloid::IO::Socket, library: :IO do
 
     context '.for_fd' do
       it "creates basic sockets" do
-        socket = Celluloid::IO::Socket.new( Celluloid::IO::Socket::AF_INET, Celluloid::IO::Socket::SOCK_STREAM, 0 )
-        copy = Celluloid::IO::Socket.for_fd( socket.fileno )
-        expect( copy ).to be_a ::Socket
+        socket = Celluloid::IO::Socket.new(Celluloid::IO::Socket::AF_INET, Celluloid::IO::Socket::SOCK_STREAM, 0)
+        copy = Celluloid::IO::Socket.for_fd(socket.fileno)
+        expect(copy).to be_a ::Socket
         copy.close
       end
     end

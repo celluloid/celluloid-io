@@ -10,8 +10,8 @@ module Celluloid
       def_delegators :@socket, :addr, :getsockopt, :setsockopt, :getsockname, :fcntl
 
       # @param socket [BasicSocket, OpenSSL::SSL::SSLSocket]
-      def initialize( socket )
-        case( socket )
+      def initialize(socket)
+        case socket
         when ::BasicSocket, OpenSSL::SSL::SSLSocket
           @socket = socket
         else
@@ -44,19 +44,19 @@ module Celluloid
       # @param socket
       # @return [SSLSocket, TCPServer, TCPSocket, UDPSocket, UNIXServer, UNIXSocket]
       # @return [nil] if the socket can't be converted
-      def self.try_convert( socket, convert_io = true )
+      def self.try_convert(socket, convert_io = true)
         case socket
-        when Celluloid::IO::Socket, Celluloid::IO::SSLServer then
+        when Celluloid::IO::Socket, Celluloid::IO::SSLServer
           socket
-        when ::TCPServer then
+        when ::TCPServer
           TCPServer.new(socket)
-        when ::TCPSocket then
+        when ::TCPSocket
           TCPSocket.new(socket)
-        when ::UDPSocket then
+        when ::UDPSocket
           UDPSocket.new(socket)
-        when ::UNIXServer then
+        when ::UNIXServer
           UNIXServer.new(socket)
-        when ::UNIXSocket then
+        when ::UNIXSocket
           UNIXSocket.new(socket)
         when OpenSSL::SSL::SSLServer
           SSLServer.new(socket.to_io, socket.instance_variable_get(:@ctx))
@@ -64,7 +64,7 @@ module Celluloid
           SSLSocket.new(socket)
         else
           if convert_io
-            return try_convert( IO.try_convert(socket), false )
+            return try_convert(IO.try_convert(socket), false)
           end
           nil
         end

@@ -5,11 +5,11 @@ module Celluloid
       extend Forwardable
       def_delegators :to_io, :bind, :connect, :send, :recvfrom_nonblock
 
-      # @overload initialize( address_family )
+      # @overload initialize(address_family)
       #   Opens a new udp socket using address_family.
       #   @param address_family [Numeric]
       #
-      # @overload initialize( socket )
+      # @overload initialize(socket)
       #   Wraps an already existing udp socket.
       #   @param socket [::UDPSocket]
       def initialize(*args)
@@ -18,9 +18,9 @@ module Celluloid
           socket = args.first
           fail ArgumentError, "wrong number of arguments (#{args.size} for 1)" if args.size != 1
           fail ArgumentError, "wrong kind of socket (#{socket.class} for UDPSocket)" unless socket.kind_of? ::UDPSocket
-          super( socket )
+          super(socket)
         else
-          super( ::UDPSocket.new(*args) )
+          super(::UDPSocket.new(*args))
         end
       end
 

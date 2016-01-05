@@ -7,16 +7,16 @@ module Celluloid
       extend Forwardable
       def_delegators :to_io, :listen, :sysaccept, :addr
 
-      # @overload initialize( port )
+      # @overload initialize(port)
       #   Opens a tcp server on the given port.
       #   @param port [Numeric]
       #
-      # @overload initialize( hostname, port )
+      # @overload initialize(hostname, port)
       #   Opens a tcp server on the given port and interface.
       #   @param hostname [String]
       #   @param port [Numeric]
       #
-      # @overload initialize( socket )
+      # @overload initialize(socket)
       #   Wraps an already existing tcp server instance.
       #   @param socket [::TCPServer]
       def initialize(*args)
@@ -25,9 +25,9 @@ module Celluloid
           socket = args.first
           fail ArgumentError, "wrong number of arguments (#{args.size} for 1)" if args.size != 1
           fail ArgumentError, "wrong kind of socket (#{socket.class} for TCPServer)" unless socket.kind_of? ::TCPServer
-          super( socket )
+          super(socket)
         else
-          super( ::TCPServer.new(*args) )
+          super(::TCPServer.new(*args))
         end
       end
 
@@ -45,7 +45,9 @@ module Celluloid
       # Convert a Ruby TCPServer into a Celluloid::IO::TCPServer
       # @deprecated Use .new instead.
       def self.from_ruby_server(ruby_server)
-        new(ruby_server)
+        warn "#from_ruby_server is deprecated please use .new instead"
+        
+        self.new(ruby_server)
       end
     end
   end

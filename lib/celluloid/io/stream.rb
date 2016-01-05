@@ -16,7 +16,7 @@ module Celluloid
       # See IO#sync for full details.
       attr_accessor :sync
 
-      def initialize( socket )
+      def initialize(socket)
         super
         @eof  = false
         @sync = true

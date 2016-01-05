@@ -29,7 +29,7 @@ module Celluloid
         new(ruby_socket)
       end
 
-      # @overload initialize( remote_host, remote_port = nil, local_host = nil, local_port = nil )
+      # @overload initialize(remote_host, remote_port = nil, local_host = nil, local_port = nil)
       #   Opens a TCP connection to remote_host on remote_port. If local_host
       #   and local_port are specified, then those parameters are used on the
       #   local end to establish the connection.
@@ -38,7 +38,7 @@ module Celluloid
       #   @param local_host  [String]
       #   @param local_port  [Numeric]
       #
-      # @overload initialize( socket )
+      # @overload initialize(socket)
       #   Wraps an already existing tcp socket.
       #   @param socket [::TCPSocket]
       #
@@ -48,9 +48,9 @@ module Celluloid
           socket = args.first
           fail ArgumentError, "wrong number of arguments (#{args.size} for 1)" if args.size != 1
           fail ArgumentError, "wrong kind of socket (#{socket.class} for TCPSocket)" unless socket.kind_of? ::TCPSocket
-          super( socket )
+          super(socket)
         else
-          super( create_socket(*args) )
+          super(create_socket(*args))
         end
       end
 
