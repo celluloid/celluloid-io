@@ -1,3 +1,35 @@
+0.17.3 (2016-01-18)
+-----
+* [#163](https://github.com/celluloid/celluloid-io/pull/163)
+  Support Ruby 2.3.0.
+
+* [#162](https://github.com/celluloid/celluloid-io/pull/162)
+  Fix broken specs.
+
+* [#160](https://github.com/celluloid/celluloid-io/pull/160)
+  Use a common super class for all socket wrappers.
+  ([@hannesg])
+
+* [#159](https://github.com/celluloid/celluloid-io/pull/159)
+  UNIXSocket: don't delegate #readline and #puts.
+  ([@hannesg])
+
+* [#158](https://github.com/celluloid/celluloid-io/pull/158)
+  Use unix sockets in unix spec instead of tcp sockets.
+  ([@hannesg])
+
+* [#157](https://github.com/celluloid/celluloid-io/pull/157)
+  Stream#close is not called in subclasses.
+  ([@hannesg])
+
+* [#155](https://github.com/celluloid/celluloid-io/pull/155)
+  Only close Selector it not already closed.
+
+* [#98](https://github.com/celluloid/celluloid-io/pull/98)
+  Added spec for writing later to a socket within a request/response cycle
+  using the timer primitives.
+  ([@TiagoCardoso1983])
+
 0.17.2 (2015-09-30)
 -----
 * Revamped test suite, using shared RSpec configuration layer provided by Celluloid itself.
@@ -84,3 +116,6 @@
 0.7.0
 -----
 * Initial release forked from Celluloid
+
+[@TiagoCardoso1983]: https://github.com/TiagoCardoso1983
+[@hannesg]: https://github.com/hannesg
