@@ -70,7 +70,7 @@ Supported Platforms
 -------------------
 
 `Celluloid::IO` works on all Ruby (MRI) versions between `1.9.3` & `2.3.1`,
-JRuby `1.6+` through `9.1.2.0`, and both Rubinius' `2.*` series, and the latest `3.*` series.
+JRuby's `1.6.*`, `1.7.*` and `9.*` series, and Rubinius' `2.*` and `3.*` series.
 
 JRuby or Rubinius are the preferred platforms as they support true thread-level
 parallelism when executing Ruby code, whereas MRI/YARV is constrained by a global
