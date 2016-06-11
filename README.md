@@ -69,13 +69,14 @@ Inside of your Ruby program, require Celluloid::IO with:
 Supported Platforms
 -------------------
 
-Celluloid::IO works on Ruby 1.9.3, 2.0.0, JRuby 1.6+, and Rubinius 2.0.
+`Celluloid::IO` works on all Ruby (MRI) versions between `1.9.3` & `2.3.1`,
+JRuby `1.6+` through `9.1.2.0`, and both Rubinius' `2.*` series, and the latest `3.*` series.
 
 JRuby or Rubinius are the preferred platforms as they support true thread-level
 parallelism when executing Ruby code, whereas MRI/YARV is constrained by a global
 interpreter lock (GIL) and can only execute one thread at a time.
 
-Celluloid::IO requires Ruby 1.9 mode on all interpreters.
+Celluloid::IO requires Ruby 1.9 mode on all interpreters, at minimum.
 
 Contributing to Celluloid::IO
 -----------------------------
