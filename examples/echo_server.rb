@@ -3,6 +3,7 @@
 # Run this as: bundle exec examples/echo_server.rb
 
 require "bundler/setup"
+require "celluloid/autostart"
 require "celluloid/io"
 
 class EchoServer

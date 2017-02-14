@@ -2,6 +2,7 @@
 
 require "rubygems"
 require "bundler/setup"
+require "celluloid/autostart"
 require "celluloid/io"
 
 class EchoClient
