@@ -16,7 +16,7 @@ class EchoUNIXClient
     puts "*** send to server: '#{msg}'"
     @socket.puts(msg)
     data = @socket.readline.chomp
-    puts "*** server unswer '#{data}'"
+    puts "*** server answer '#{data}'"
     data
   end
 
