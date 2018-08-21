@@ -1,10 +1,9 @@
 ![Celluloid::IO](https://github.com/celluloid/celluloid-io/raw/master/logo.png)
 ================
 [![Gem Version](https://badge.fury.io/rb/celluloid-io.svg)](http://rubygems.org/gems/celluloid-io)
-[![Build Status](https://secure.travis-ci.org/celluloid/celluloid-io.svg?branch=master)](http://travis-ci.org/celluloid/celluloid-io)
-[![Code Climate](https://codeclimate.com/github/celluloid/celluloid-io.svg)](https://codeclimate.com/github/celluloid/celluloid-io)
-[![Coverage Status](https://coveralls.io/repos/celluloid/celluloid-io/badge.svg?branch=master)](https://coveralls.io/r/celluloid/celluloid-io)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/celluloid/celluloid-io/blob/master/LICENSE.txt)
+[![Build Status](https://secure.travis-ci.org/celluloid/celluloid-io.svg?branch=master)](http://travis-ci.org/celluloid/celluloid-io)
+[![Maintained: no](https://img.shields.io/maintenance/no/2016.svg)](https://github.com/celluloid/celluloid/issues/779)
 
 You don't have to choose between threaded and evented IO! Celluloid::IO
 provides an event-driven IO system for building fast, scalable network
